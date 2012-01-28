@@ -4,17 +4,17 @@
 #include <string>
 #include <map>
 #include <typeinfo>
-//#include "convert.h"
 class Settings
     {
        public:
          Settings();
+         
          void get(const std::string &fName);
+         
          bool keyExists(const std::string &key) const;
+        
          template <typename ValueType> ValueType getValueOfKey(const std::string &key,
                             ValueType const &defaultValue = ValueType()) const;
-         //void read(std::string filename = "config");
-         //friend istream& operator >>(istream &is,Settings &obj);
          
          ~Settings();
       

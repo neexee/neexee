@@ -1,5 +1,6 @@
 #ifndef __TOOLS
 #define __TOOLS
+#include <stdlib.h>
 void exitWithError(const std::string &error) 
     {
          std::cout << error;

@@ -1,5 +1,6 @@
 #include "settings.h"
 #include "convert.h"
+
 void Settings::removeComment(std::string &line) const
     {
         if (line.find('#') != line.npos)
@@ -116,25 +117,3 @@ template <typename ValueType> ValueType Settings::getValueOfKey(const std::strin
 
     return Convert::string_to_T<ValueType>(contents.find(key)->second);
 }
-/*
-int main()
-{
-    ConfigFile cfg("config.cfg");
-
-    bool exists = cfg.keyExists("car");
-    std::cout << "car key: " << std::boolalpha << exists << "\n";
-    exists = cfg.keyExists("fruits");
-    std::cout << "fruits key: " << exists << "\n";
-
-    std::string someValue = cfg.getValueOfKey<std::string>("mykey", "Unknown");
-    std::cout << "value of key mykey: " << someValue << "\n";
-    std::string carValue = cfg.getValueOfKey<std::string>("car");
-    std::cout << "value of key car: " << carValue << "\n";
-    double doubleVal = cfg.getValueOfKey<double>("double");
-    std::cout << "value of key double: " << doubleVal << "\n\n";
-
-    std::cin.get();
-    return 0;
-}
-*/
-
