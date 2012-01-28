@@ -1,9 +1,10 @@
 #include "bot.h"
 using namespace gloox;
-Bot::Bot()
-    {
-        JID jid( "bot@jabber.nsu.ru/Desu_Machine" );
-        j = new Client( jid, "alysx359" );
+Bot::Bot(Settings& sets)
+    {   
+        settings = sets;
+        JID jid(settings.getValueOfKey<std::string>("jid"));
+        j = new Client( jid, settings.getValueOfKey<std::string>("pass"));
         j->disableRoster();
         j->setCompression(false);
         j->setPresence( gloox::Presence::Available, -1 );
@@ -63,7 +64,7 @@ void Bot::handleMUCMessage (MUCRoom *room, const Message &msg, bool priv)
 void Bot::onConnect()
     {
         std::cout << "Connected" << std::endl;
-        room = new MUCRoom( j, std::string( ROOM_JID ), 0, 0 );
+        room = new MUCRoom( j, settings.getValueOfKey<std::string>(std::string("room")), 0, 0 );
         room->join();
 
         room->send("KOKOKOKOKO!");

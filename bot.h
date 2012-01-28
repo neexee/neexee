@@ -8,12 +8,13 @@
 
 #include <string>
 #include <iostream>
-#define ROOM_JID "fit@conference.jabber.ru/koka"
+#include "settings.h"
+
 using namespace gloox;
 class Bot : public MessageHandler, gloox::ConnectionListener, gloox::MUCRoomHandler  
 {
     public:
-    Bot();
+    Bot( Settings& sets);
     
     ~Bot();
     
@@ -58,5 +59,5 @@ class Bot : public MessageHandler, gloox::ConnectionListener, gloox::MUCRoomHand
     private:
     Client* j;
     MUCRoom *room;
-
+    Settings settings;
 };
