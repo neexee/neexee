@@ -28,9 +28,7 @@ Bot::~Bot()
 void Bot::handleMessage( const Message& stanza,
             MessageSession* session)
     {
-        JID ko("fit@conference.jabber.ru");
-        //Message msg( stanza.from(), "hello world" );
-        Message msg (Message::Chat, ko, "KOKOKOKOKO" );
+        Message msg (Message::Chat, stanza.from(), "KOKOKOKOKO" );
         j->send( msg );
     }
 
@@ -46,11 +44,13 @@ bool Bot::onTLSConnect( const gloox::CertInfo& )
 
 void Bot::handleMUCMessage (MUCRoom *room, const Message &msg, bool priv)
     {
-       if (!msg.when())
+       if (!msg.when() && msg.from().resource().compare(room->nick()))
         {
            if (msg.body() == "!ping")
-              room->send("pong");
-
+           {
+             std::string pong = "pong to ";
+              room->send(pong.append(msg.from().resource()));
+           }
            if (!msg.body().compare(0, 4, "!say ", 0, 4))
               room->send(msg.body().substr(5));       
 
