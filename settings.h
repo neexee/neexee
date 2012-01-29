@@ -15,10 +15,11 @@ class Settings
          bool keyExists( const std::string &key) const;
         
          // template <typename ValueType> ValueType getValueOfKey(std::string &key) const;
-         template <typename ValueType> ValueType getValueOfKey(const std::string& key)
+         template <typename ValueType> ValueType getValueOfKey(const std::string& key, 
+                                                               const ValueType& defaultValue = ValueType())
              {
                  if (!keyExists(key))
-                      return NULL;
+                      return defaultValue;
 
                   return Convert::string_to_T<ValueType>(contents.find(key)->second);
              };
