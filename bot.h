@@ -14,7 +14,7 @@ using namespace gloox;
 class Bot : public MessageHandler, gloox::ConnectionListener, gloox::MUCRoomHandler  
 {
     public:
-    Bot( Settings& sets);
+    Bot(Settings& sets);
     
     ~Bot();
     

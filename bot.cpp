@@ -3,6 +3,7 @@ using namespace gloox;
 Bot::Bot(Settings& sets)
     {   
         settings = sets;
+        settings.getValueOfKey<std::string>("jid");
         JID jid(settings.getValueOfKey<std::string>("jid"));
         j = new Client( jid, settings.getValueOfKey<std::string>("pass"));
         j->disableRoster();
@@ -64,7 +65,7 @@ void Bot::handleMUCMessage (MUCRoom *room, const Message &msg, bool priv)
 void Bot::onConnect()
     {
         std::cout << "Connected" << std::endl;
-        room = new MUCRoom( j, settings.getValueOfKey<std::string>(std::string("room")), 0, 0 );
+        room = new MUCRoom( j, settings.getValueOfKey<std::string>("room"), 0, 0 );
         room->join();
 
         room->send("KOKOKOKOKO!");

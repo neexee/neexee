@@ -20,7 +20,7 @@ public:
     }
         
     template <typename T>
-    static T string_to_T(std::string const &val) 
+    static T string_to_T( const std::string& val) 
     {
         std::istringstream istr(val);
         T returnVal;
@@ -29,11 +29,12 @@ public:
 
         return returnVal;
     }
-
+/*
     template <typename T>
-    static std::string string_to_T(std::string const &val)
+    static std::string string_to_T(std::string& val)
     {
         return val;
     }
+*/
 };
 #endif

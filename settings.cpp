@@ -1,17 +1,17 @@
 #include "settings.h"
 #include "convert.h"
-
-void Settings::removeComment(std::string &line) const
+#include "tools.h"
+void Settings::removeComment(std::string& line) const
     {
         if (line.find('#') != line.npos)
             line.erase(line.find('#'));
     }
 
-bool Settings::onlyWhitespace(const std::string &line) const
+bool Settings::onlyWhitespace(std::string &line) const
     {
         return (line.find_first_not_of(' ') == line.npos);
     }
-bool Settings::validLine(const std::string &line) const
+bool Settings::validLine(std::string &line) const
     {
         std::string temp = line;
         temp.erase(0, temp.find_first_not_of("\t "));
@@ -25,20 +25,20 @@ bool Settings::validLine(const std::string &line) const
         return false;
     }
 
-void Settings::extractKey(std::string &key, size_t const &sepPos, const std::string &line) const
+void Settings::extractKey(std::string &key, size_t& sepPos, std::string& line) const
     {
         key = line.substr(0, sepPos);
         if (key.find('\t') != line.npos || key.find(' ') != line.npos)
             key.erase(key.find_first_of("\t "));
     }
-void Settings::extractValue(std::string &value, size_t const &sepPos, const std::string &line) const
+void Settings::extractValue(std::string &value, size_t& sepPos, std::string &line) const
     {
         value = line.substr(sepPos + 1);
         value.erase(0, value.find_first_not_of("\t "));
         value.erase(value.find_last_not_of("\t ") + 1);
     }
 
-void Settings::extractContents(const std::string &line) 
+void Settings::extractContents(std::string &line) 
     {
         std::string temp = line;
         temp.erase(0, temp.find_first_not_of("\t "));
@@ -54,7 +54,7 @@ void Settings::extractContents(const std::string &line)
             exitWithError("CFG: Can only have unique key names!\n");
     }
 
-void Settings::parseLine(const std::string &line, size_t const lineNo)
+void Settings::parseLine(std::string& line, size_t lineNo)
     {
         if (line.find('=') == line.npos)
             exitWithError("CFG: Couldn't find separator on line: " + Convert::T_to_string(lineNo) + "\n");
@@ -91,29 +91,34 @@ void Settings::ExtractKeys()
 
         file.close();
     }
+
 Settings::Settings()
     {
        // this->fName = fName;
         //ExtractKeys();
     }
-void Settings::get(const std::string &fName)
+
+void Settings::get( const std::string& fName)
     {
         this->fName = fName;
         ExtractKeys();
     }
-bool Settings::keyExists(const std::string &key) const
+
+bool Settings::keyExists(const std::string& key) const
     {
         return contents.find(key) != contents.end();
     }
+
 Settings::~Settings()
     {
 
     }
-template <typename ValueType> ValueType Settings::getValueOfKey(const std::string &key,
-        ValueType const &defaultValue) const
-{
-    if (!keyExists(key))
-        return defaultValue;
+/*
+template <typename ValueType> ValueType Settings::getValueOfKey(std::string &key) const
+    {
+        if (!keyExists(key))
+            return NULL;
 
-    return Convert::string_to_T<ValueType>(contents.find(key)->second);
-}
+        return Convert::string_to_T<ValueType>(contents.find(key)->second);
+    }
+*/

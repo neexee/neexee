@@ -1,5 +1,4 @@
 #include "bot.h"
-//#include "settings.h"
 #include <unistd.h>
 #include <stdio.h>
 #define DEFAULT_CONFNAME "config"
@@ -11,7 +10,6 @@ int main( int argc, char* argv[] )
          {   
              std::cout<<"Picked up settings ";
              settings.get("config");
-            // b.connect();
          }
         else
          {   char c; 
