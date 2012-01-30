@@ -1,4 +1,5 @@
 #include "bot.h"
+#include "debug/debug.h"
 using namespace gloox;
 Bot::Bot(Settings& sets)
     {   
@@ -46,6 +47,7 @@ void Bot::handleMUCMessage (MUCRoom *room, const Message &msg, bool priv)
     {
        if (!msg.when() && msg.from().resource().compare(room->nick()))
         {
+            /*
            if (msg.body() == "!ping")
            {
              std::string pong = "pong to ";
@@ -57,7 +59,9 @@ void Bot::handleMUCMessage (MUCRoom *room, const Message &msg, bool priv)
 
            if (!msg.body().compare(0, 2, "!ko", 0, 2))
                room->send("/me прокукарекал что-то в сторону " + msg.body().substr(3));
-
+            */
+            INFO("Handling room message");
+            room->send(executor.exec(msg.body(), msg.from().resource(), msg.body()));
          }
 
 

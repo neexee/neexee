@@ -9,7 +9,7 @@
 #include <string>
 #include <iostream>
 #include "settings.h"
-
+#include "module/moduleexecutor.h"
 using namespace gloox;
 class Bot : public MessageHandler, gloox::ConnectionListener, gloox::MUCRoomHandler  
 {
@@ -60,4 +60,5 @@ class Bot : public MessageHandler, gloox::ConnectionListener, gloox::MUCRoomHand
     Client* j;
     MUCRoom *room;
     Settings settings;
+    ModuleExecutor executor;
 };
