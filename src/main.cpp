@@ -8,7 +8,7 @@ int main( int argc, char* argv[] )
         char options[] = "f::";  /* valid options */
         if(argc < 2)
          {   
-             std::cout<<"Picked up settings ";
+             std::cout<<"Picked up settings\n ";
              settings.get("config");
          }
         else

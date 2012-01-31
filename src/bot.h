@@ -5,11 +5,12 @@
 #include <gloox/connectionlistener.h>
 #include <gloox/disco.h>
 #include <gloox/mucroomhandler.h>
-
+#include <vector>
 #include <string>
 #include <iostream>
 #include "settings.h"
 #include "module/moduleexecutor.h"
+#define SEPARATORS " ,:"
 using namespace gloox;
 class Bot : public MessageHandler, gloox::ConnectionListener, gloox::MUCRoomHandler  
 {
@@ -19,6 +20,7 @@ class Bot : public MessageHandler, gloox::ConnectionListener, gloox::MUCRoomHand
     ~Bot();
     
     void connect();
+
     
     protected:
 
@@ -36,7 +38,7 @@ class Bot : public MessageHandler, gloox::ConnectionListener, gloox::MUCRoomHand
                                               gloox::MUCRoomParticipant, 
                                               const gloox::Presence&){}
     
-    virtual bool handleMUCRoomCreation(gloox::MUCRoom*){}
+    virtual bool handleMUCRoomCreation(gloox::MUCRoom*){ return true;}
 
     virtual void handleMUCSubject(gloox::MUCRoom*,
                                   const std::string&,
@@ -57,6 +59,10 @@ class Bot : public MessageHandler, gloox::ConnectionListener, gloox::MUCRoomHand
                                 std::allocator<gloox::Disco::Item*> >&){}
     
     private:
+    void registerModules();
+
+    std::vector<std::string> tokenize(const std::string& message);
+
     Client* j;
     MUCRoom *room;
     Settings settings;

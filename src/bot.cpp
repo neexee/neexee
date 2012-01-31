@@ -1,5 +1,9 @@
 #include "bot.h"
 #include "debug/debug.h"
+#include <boost/foreach.hpp>
+#include <boost/tokenizer.hpp>
+#include "module/ping.h"
+#include "module/asyncmodule.h"
 using namespace gloox;
 Bot::Bot(Settings& sets)
     {   
@@ -14,11 +18,37 @@ Bot::Bot(Settings& sets)
         j->disco()->setIdentity("kokoko", "bot");
         j->registerMessageHandler( this );
         j->registerConnectionListener( this );
+        registerModules();
     }
 
 void Bot::connect()
     {
         j->connect();
+    }
+std::vector<std::string> Bot::tokenize(const std::string& message)
+    {
+        using std::vector;
+        using std::string;
+        using boost::char_separator;
+        using boost::tokenizer;
+        vector<string> token_vector;
+        char_separator<char> sep(SEPARATORS);
+        tokenizer< char_separator<char> > tokens(message, sep);
+       INFO("Addded tokens");
+
+        for(tokenizer<char_separator<char> >::iterator it=tokens.begin(); it!=tokens.end();++it)
+            {
+                token_vector.push_back(*it);
+                INFO((*it).c_str());
+
+            }
+        if(token_vector.front().compare(room->nick()) == 0)
+                {
+                    token_vector.erase(token_vector.begin());
+                }
+        //BUG, nick can contain SEPARATORS
+        return token_vector;
+
     }
 Bot::~Bot()
     {
@@ -40,7 +70,7 @@ void Bot::onDisconnect( gloox::ConnectionError e )
 
 bool Bot::onTLSConnect( const gloox::CertInfo& )
     {
-
+     return true;
     }
 
 void Bot::handleMUCMessage (MUCRoom *room, const Message &msg, bool priv)
@@ -61,7 +91,10 @@ void Bot::handleMUCMessage (MUCRoom *room, const Message &msg, bool priv)
                room->send("/me прокукарекал что-то в сторону " + msg.body().substr(3));
             */
             INFO("Handling room message");
-            room->send(executor.exec(msg.body(), msg.from().resource(), msg.body()));
+            std::vector<std::string> tokens = tokenize(msg.body());
+            room->send(executor.exec( msg.from().resource(),tokens));
+            
+
          }
 
 
@@ -74,4 +107,14 @@ void Bot::onConnect()
 
         room->send("KOKOKOKOKO!");
         room->registerMUCRoomHandler(this);
+    }
+void Bot::registerModules()
+    {
+        //settings read
+        //test
+        INFO("Registering Ping");
+        executor.reg("!ping", new Ping());
+        INFO("Registering bash script");
+        executor.reg("!ko", new AsyncModule(), "bash ~/ko.sh");
+
     }

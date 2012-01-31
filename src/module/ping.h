@@ -1,9 +1,10 @@
 #ifndef MODULE_PING_H
 #define MODULE_PING_H
-class Ping : piblic Module 
+#include "module.h"
+class Ping : public Module 
     {
         public:
             virtual std::string generate_answer(const std::string& sender,
-                                                const std::string& text);
-    }
+                                                const std::vector<std::string>& text);
+    };
 #endif

@@ -8,10 +8,12 @@
  * weather = bash ~/weather.sh
  * Потом fork/exec, а откуда ждать результатов - надо придумать (Это делает этот generate_answer).
  * */
-class AsyncModule
+#define MAX_ARG_NUM 1
+#include "module.h"
+class AsyncModule : public Module
     {
         public:
             virtual std::string generate_answer(const std::string& sender,
-                                                const std::string& text);
+                                                const std::vector<std::string>& text);
     };
 #endif

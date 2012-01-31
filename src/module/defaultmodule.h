@@ -6,6 +6,6 @@ class DefaultModule: public Module
     {
         public:
             virtual std::string generate_answer(const std::string& sender,
-                                                const std::string& text);
+                                                const std::vector<std::string>& text);
     };
 #endif

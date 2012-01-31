@@ -5,7 +5,10 @@ OBJ = src/bot.o\
 	  src/settings.o\
 	  src/module/moduleexecutor.o\
 	  src/module/defaultmodule.o\
+	  src/module/ping.o\
+	  src/module/asyncmodule.o\
 	  src/debug/debug.o
+
 LDFLAGS=-lgloox -lpthread
 CXXFLAGS = -DDEBUG=2  -Wall -Wextra
 BIN = bot
