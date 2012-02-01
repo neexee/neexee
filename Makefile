@@ -10,7 +10,7 @@ OBJ = src/bot.o\
 	  src/debug/debug.o
 
 LDFLAGS=-lgloox -lpthread
-CXXFLAGS = -DDEBUG=2  -Wall -Wextra
+CXXFLAGS = -DDEBUG=2  -Wall -Wextra -std=gnu++0x
 BIN = bot
 all: $(OBJ)
 		$(CXX) $(LDFLAGS) $+ -o $(BIN)

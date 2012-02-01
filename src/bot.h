@@ -11,6 +11,7 @@
 #include "settings.h"
 #include "module/moduleexecutor.h"
 #define SEPARATORS " ,:"
+#define FIRST_MESSAGE "Всем привет в этом чатике"
 using namespace gloox;
 class Bot : public MessageHandler, gloox::ConnectionListener, gloox::MUCRoomHandler  
 {

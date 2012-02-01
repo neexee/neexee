@@ -1,0 +1,79 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+BUFFER_SIZE	socket.cpp	/^    const int BUFFER_SIZE = 100000;        \/\/ size of reading buffer$/;"	m	namespace:__anon1	file:
+LISTEN_BACKLOG	socket.cpp	/^    const int LISTEN_BACKLOG = 50;       \/*$/;"	m	namespace:__anon1	file:
+SOCKET_DOMAIN	socket.cpp	/^    const int SOCKET_DOMAIN = AF_INET;   \/\/ ipv4 family$/;"	m	namespace:__anon1	file:
+SOCKET_PROTOCOL	socket.cpp	/^    const int SOCKET_PROTOCOL = 0;       \/\/ operating system choose most approproate protocol$/;"	m	namespace:__anon1	file:
+SOCKET_TYPE	socket.cpp	/^    const int SOCKET_TYPE = SOCK_STREAM; \/*$/;"	m	namespace:__anon1	file:
+__SOCKET_H	socket.h	2;"	d
+__anon1::BUFFER_SIZE	socket.cpp	/^    const int BUFFER_SIZE = 100000;        \/\/ size of reading buffer$/;"	m	namespace:__anon1	file:
+__anon1::LISTEN_BACKLOG	socket.cpp	/^    const int LISTEN_BACKLOG = 50;       \/*$/;"	m	namespace:__anon1	file:
+__anon1::SOCKET_DOMAIN	socket.cpp	/^    const int SOCKET_DOMAIN = AF_INET;   \/\/ ipv4 family$/;"	m	namespace:__anon1	file:
+__anon1::SOCKET_PROTOCOL	socket.cpp	/^    const int SOCKET_PROTOCOL = 0;       \/\/ operating system choose most approproate protocol$/;"	m	namespace:__anon1	file:
+__anon1::SOCKET_TYPE	socket.cpp	/^    const int SOCKET_TYPE = SOCK_STREAM; \/*$/;"	m	namespace:__anon1	file:
+accept	socket.cpp	/^    socket_t socket_t::accept() const$/;"	f	class:socket_ipv4::socket_t	signature:() const
+accept	socket.h	/^            socket_t accept () const; \/\/return new socket after accept$/;"	p	class:socket_ipv4::socket_t	access:public	signature:() const
+bind	socket.cpp	/^    void socket_t::bind (const char* host, const int port)$/;"	f	class:socket_ipv4::socket_t	signature:(const char* host, const int port)
+bind	socket.h	/^            void bind (const char* host, const int port);$/;"	p	class:socket_ipv4::socket_t	access:public	signature:(const char* host, const int port)
+check_error	socket.cpp	/^    void socket_t::check_error (const int error) const$/;"	f	class:socket_ipv4::socket_t	signature:(const int error) const
+check_error	socket.h	/^            void check_error(const int error) const;$/;"	p	class:socket_ipv4::socket_t	access:private	signature:(const int error) const
+close	socket.cpp	/^    void socket_t::close ()$/;"	f	class:socket_ipv4::socket_t	signature:()
+close	socket.h	/^            void close();$/;"	p	class:socket_ipv4::socket_t	access:public	signature:()
+connect	socket.cpp	/^    void socket_t::connect(const char* host, const int port)$/;"	f	class:socket_ipv4::socket_t	signature:(const char* host, const int port)
+connect	socket.h	/^            void connect(const char* host, const int port);$/;"	p	class:socket_ipv4::socket_t	access:public	signature:(const char* host, const int port)
+get	socket.cpp	/^    bool socket_t::get(char*& buffer, int& size, const bool check_end_symbols)$/;"	f	class:socket_ipv4::socket_t	signature:(char*& buffer, int& size, const bool check_end_symbols)
+get	socket.h	/^            bool get (char*& buffer, int& size, const bool check_end_symbols = false); \/\/Nonblock$/;"	p	class:socket_ipv4::socket_t	access:public	signature:(char*& buffer, int& size, const bool check_end_symbols = false)
+get_host	socket.cpp	/^    in_addr_t socket_t::get_host(const char* host_name)$/;"	f	class:socket_ipv4::socket_t	signature:(const char* host_name)
+get_host	socket.h	/^            in_addr_t get_host(const char* host_name);$/;"	p	class:socket_ipv4::socket_t	access:private	signature:(const char* host_name)
+listen	socket.cpp	/^    void socket_t::listen () const$/;"	f	class:socket_ipv4::socket_t	signature:() const
+listen	socket.h	/^            void listen () const;$/;"	p	class:socket_ipv4::socket_t	access:public	signature:() const
+operator =	socket.cpp	/^    socket_t socket_t::operator= (const socket_t& another_socket)$/;"	f	class:socket_ipv4::socket_t	signature:(const socket_t& another_socket)
+operator =	socket.h	/^            socket_t operator= (const socket_t& another_socket);$/;"	p	class:socket_ipv4::socket_t	access:public	signature:(const socket_t& another_socket)
+recv_counter	socket.h	/^            int recv_counter;$/;"	m	class:socket_ipv4::socket_t	access:private
+send	socket.cpp	/^    void socket_t::send (const char* message, const int size)$/;"	f	class:socket_ipv4::socket_t	signature:(const char* message, const int size)
+send	socket.h	/^            void send (const char* message, int size); \/\/Block$/;"	p	class:socket_ipv4::socket_t	access:public	signature:(const char* message, int size)
+socket_addr	socket.h	/^            struct sockaddr* socket_addr;$/;"	m	class:socket_ipv4::socket_t	typeref:struct:socket_ipv4::socket_t::sockaddr	access:private
+socket_fd	socket.h	/^            int socket_fd;$/;"	m	class:socket_ipv4::socket_t	access:private
+socket_ipv4	socket.cpp	/^namespace socket_ipv4$/;"	n	file:
+socket_ipv4	socket.h	/^namespace socket_ipv4$/;"	n
+socket_ipv4::socket_t	socket.h	/^    class socket_t$/;"	c	namespace:socket_ipv4
+socket_ipv4::socket_t::accept	socket.cpp	/^    socket_t socket_t::accept() const$/;"	f	class:socket_ipv4::socket_t	signature:() const
+socket_ipv4::socket_t::accept	socket.h	/^            socket_t accept () const; \/\/return new socket after accept$/;"	p	class:socket_ipv4::socket_t	access:public	signature:() const
+socket_ipv4::socket_t::bind	socket.cpp	/^    void socket_t::bind (const char* host, const int port)$/;"	f	class:socket_ipv4::socket_t	signature:(const char* host, const int port)
+socket_ipv4::socket_t::bind	socket.h	/^            void bind (const char* host, const int port);$/;"	p	class:socket_ipv4::socket_t	access:public	signature:(const char* host, const int port)
+socket_ipv4::socket_t::check_error	socket.cpp	/^    void socket_t::check_error (const int error) const$/;"	f	class:socket_ipv4::socket_t	signature:(const int error) const
+socket_ipv4::socket_t::check_error	socket.h	/^            void check_error(const int error) const;$/;"	p	class:socket_ipv4::socket_t	access:private	signature:(const int error) const
+socket_ipv4::socket_t::close	socket.cpp	/^    void socket_t::close ()$/;"	f	class:socket_ipv4::socket_t	signature:()
+socket_ipv4::socket_t::close	socket.h	/^            void close();$/;"	p	class:socket_ipv4::socket_t	access:public	signature:()
+socket_ipv4::socket_t::connect	socket.cpp	/^    void socket_t::connect(const char* host, const int port)$/;"	f	class:socket_ipv4::socket_t	signature:(const char* host, const int port)
+socket_ipv4::socket_t::connect	socket.h	/^            void connect(const char* host, const int port);$/;"	p	class:socket_ipv4::socket_t	access:public	signature:(const char* host, const int port)
+socket_ipv4::socket_t::get	socket.cpp	/^    bool socket_t::get(char*& buffer, int& size, const bool check_end_symbols)$/;"	f	class:socket_ipv4::socket_t	signature:(char*& buffer, int& size, const bool check_end_symbols)
+socket_ipv4::socket_t::get	socket.h	/^            bool get (char*& buffer, int& size, const bool check_end_symbols = false); \/\/Nonblock$/;"	p	class:socket_ipv4::socket_t	access:public	signature:(char*& buffer, int& size, const bool check_end_symbols = false)
+socket_ipv4::socket_t::get_host	socket.cpp	/^    in_addr_t socket_t::get_host(const char* host_name)$/;"	f	class:socket_ipv4::socket_t	signature:(const char* host_name)
+socket_ipv4::socket_t::get_host	socket.h	/^            in_addr_t get_host(const char* host_name);$/;"	p	class:socket_ipv4::socket_t	access:private	signature:(const char* host_name)
+socket_ipv4::socket_t::listen	socket.cpp	/^    void socket_t::listen () const$/;"	f	class:socket_ipv4::socket_t	signature:() const
+socket_ipv4::socket_t::listen	socket.h	/^            void listen () const;$/;"	p	class:socket_ipv4::socket_t	access:public	signature:() const
+socket_ipv4::socket_t::operator =	socket.cpp	/^    socket_t socket_t::operator= (const socket_t& another_socket)$/;"	f	class:socket_ipv4::socket_t	signature:(const socket_t& another_socket)
+socket_ipv4::socket_t::operator =	socket.h	/^            socket_t operator= (const socket_t& another_socket);$/;"	p	class:socket_ipv4::socket_t	access:public	signature:(const socket_t& another_socket)
+socket_ipv4::socket_t::recv_counter	socket.h	/^            int recv_counter;$/;"	m	class:socket_ipv4::socket_t	access:private
+socket_ipv4::socket_t::send	socket.cpp	/^    void socket_t::send (const char* message, const int size)$/;"	f	class:socket_ipv4::socket_t	signature:(const char* message, const int size)
+socket_ipv4::socket_t::send	socket.h	/^            void send (const char* message, int size); \/\/Block$/;"	p	class:socket_ipv4::socket_t	access:public	signature:(const char* message, int size)
+socket_ipv4::socket_t::socket_addr	socket.h	/^            struct sockaddr* socket_addr;$/;"	m	class:socket_ipv4::socket_t	typeref:struct:socket_ipv4::socket_t::sockaddr	access:private
+socket_ipv4::socket_t::socket_fd	socket.h	/^            int socket_fd;$/;"	m	class:socket_ipv4::socket_t	access:private
+socket_ipv4::socket_t::socket_t	socket.cpp	/^    socket_t::socket_t ()$/;"	f	class:socket_ipv4::socket_t	signature:()
+socket_ipv4::socket_t::socket_t	socket.cpp	/^    socket_t::socket_t (const int _socket, struct sockaddr* _socket_addr):$/;"	f	class:socket_ipv4::socket_t	signature:(const int _socket, struct sockaddr* _socket_addr)
+socket_ipv4::socket_t::socket_t	socket.h	/^            socket_t (); \/\/make socket for connect or listen$/;"	p	class:socket_ipv4::socket_t	access:public	signature:()
+socket_ipv4::socket_t::socket_t	socket.h	/^            socket_t (const int _socket, struct sockaddr* _socket_addr); \/\/for return client socket$/;"	p	class:socket_ipv4::socket_t	access:private	signature:(const int _socket, struct sockaddr* _socket_addr)
+socket_ipv4::socket_t::~socket_t	socket.cpp	/^    socket_t::~socket_t ()$/;"	f	class:socket_ipv4::socket_t	signature:()
+socket_ipv4::socket_t::~socket_t	socket.h	/^            virtual ~socket_t ();$/;"	p	class:socket_ipv4::socket_t	access:public	signature:()
+socket_t	socket.cpp	/^    socket_t::socket_t ()$/;"	f	class:socket_ipv4::socket_t	signature:()
+socket_t	socket.cpp	/^    socket_t::socket_t (const int _socket, struct sockaddr* _socket_addr):$/;"	f	class:socket_ipv4::socket_t	signature:(const int _socket, struct sockaddr* _socket_addr)
+socket_t	socket.h	/^            socket_t (); \/\/make socket for connect or listen$/;"	p	class:socket_ipv4::socket_t	access:public	signature:()
+socket_t	socket.h	/^            socket_t (const int _socket, struct sockaddr* _socket_addr); \/\/for return client socket$/;"	p	class:socket_ipv4::socket_t	access:private	signature:(const int _socket, struct sockaddr* _socket_addr)
+socket_t	socket.h	/^    class socket_t$/;"	c	namespace:socket_ipv4
+~socket_t	socket.cpp	/^    socket_t::~socket_t ()$/;"	f	class:socket_ipv4::socket_t	signature:()
+~socket_t	socket.h	/^            virtual ~socket_t ();$/;"	p	class:socket_ipv4::socket_t	access:public	signature:()

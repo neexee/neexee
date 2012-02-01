@@ -3,10 +3,11 @@
 #include <boost/foreach.hpp>
 #include <boost/tokenizer.hpp>
 #include "module/ping.h"
+#include "module/defaultmodule.h"
 #include "module/asyncmodule.h"
 using namespace gloox;
 Bot::Bot(Settings& sets)
-    {   
+    {
         settings = sets;
         settings.getValueOfKey<std::string>("jid");
         JID jid(settings.getValueOfKey<std::string>("jid"));
@@ -18,7 +19,6 @@ Bot::Bot(Settings& sets)
         j->disco()->setIdentity("kokoko", "bot");
         j->registerMessageHandler( this );
         j->registerConnectionListener( this );
-        registerModules();
     }
 
 void Bot::connect()
@@ -34,7 +34,8 @@ std::vector<std::string> Bot::tokenize(const std::string& message)
         vector<string> token_vector;
         char_separator<char> sep(SEPARATORS);
         tokenizer< char_separator<char> > tokens(message, sep);
-       INFO("Addded tokens");
+  
+        INFO("Addded tokens");
 
         for(tokenizer<char_separator<char> >::iterator it=tokens.begin(); it!=tokens.end();++it)
             {
@@ -42,11 +43,11 @@ std::vector<std::string> Bot::tokenize(const std::string& message)
                 INFO((*it).c_str());
 
             }
-        if(token_vector.front().compare(room->nick()) == 0)
-                {
-                    token_vector.erase(token_vector.begin());
-                }
-        //BUG, nick can contain SEPARATORS
+//        if(token_vector.front().compare(room->nick()) == 0)
+//              {
+//                  token_vector.erase(token_vector.begin());
+//              }
+//BUG, nick can contain SEPARATORS
         return token_vector;
 
     }
@@ -77,26 +78,15 @@ void Bot::handleMUCMessage (MUCRoom *room, const Message &msg, bool priv)
     {
        if (!msg.when() && msg.from().resource().compare(room->nick()))
         {
-            /*
-           if (msg.body() == "!ping")
-           {
-             std::string pong = "pong to ";
-              room->send(pong.append(msg.from().resource()));
-           }
-           if (!msg.body().compare(0, 4, "!say ", 0, 4))
-              room->send(msg.body().substr(5));       
 
-
-           if (!msg.body().compare(0, 2, "!ko", 0, 2))
-               room->send("/me прокукарекал что-то в сторону " + msg.body().substr(3));
-            */
             INFO("Handling room message");
             std::vector<std::string> tokens = tokenize(msg.body());
-            room->send(executor.exec( msg.from().resource(),tokens));
-            
-
-         }
-
+            std::string answer = executor.exec( msg.from().resource(),tokens); 
+            if(answer != "")
+            {
+                 room->send(answer);
+            }
+        }
 
     }
 void Bot::onConnect()
@@ -105,8 +95,9 @@ void Bot::onConnect()
         room = new MUCRoom( j, settings.getValueOfKey<std::string>("room"), 0, 0 );
         room->join();
 
-        room->send("KOKOKOKOKO!");
+        room->send(FIRST_MESSAGE);
         room->registerMUCRoomHandler(this);
+        registerModules();
     }
 void Bot::registerModules()
     {
@@ -115,6 +106,17 @@ void Bot::registerModules()
         INFO("Registering Ping");
         executor.reg("!ping", new Ping());
         INFO("Registering bash script");
-        executor.reg("!ko", new AsyncModule(), "bash ~/ko.sh");
+        
+        executor.reg("!ko", new AsyncModule(),\
+                std::vector<std::string>({"/bin/bash","/home/violetta/ko.sh"}));
+
+        executor.reg("!py", new AsyncModule(),\
+                std::vector<std::string>({"/usr/bin/python3","/home/violetta/best_os.py"}));
+        
+        executor.reg(room->nick(), new DefaultModule());
+
+        executor.reg("!blya", new AsyncModule(),\
+                std::vector<std::string>({"/bin/zsh","/home/violetta/sovet.sh"}));
+
 
     }
