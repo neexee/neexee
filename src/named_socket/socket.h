@@ -11,7 +11,7 @@
 #include <sys/un.h> 
 #include <sys/types.h>
 #include <sys/socket.h>
-#include <arpa/inet.h> //for in_addr_t
+//#include <arpa/inet.h> //for in_addr_t
 
 namespace socket_local
 {
@@ -34,10 +34,10 @@ namespace socket_local
             socket_t operator= (const socket_t& another_socket);
         private:
             int socket_fd;
-            struct sockaddr_un* socket_addr;
+            struct sockaddr* socket_addr;
             int recv_counter;
 
-            socket_t (const int _socket, struct sockaddr_un* _socket_addr); //for return client socket
+            socket_t (const int _socket, struct sockaddr* _socket_addr); //for return client socket
             void check_error(const int error) const;
     };
 }

@@ -1,13 +1,11 @@
 #include <iostream>
 #include <exception>
 #include <stdexcept>
-#include <algorithm>
+//#include <algorithm>
 #include <string>
 #include <sys/socket.h>
-#include <arpa/inet.h> //for in_addr_t
-#include <netdb.h> //for gethostbyname
 #include <unistd.h>
-#include <time.h>
+//#include <time.h>
 #include <fcntl.h>
 #include <cstring> // need to memset
 #include <cstdlib>
@@ -76,8 +74,6 @@ namespace socket_local
         memset(&_socket_addr, 0, sizeof(_socket_addr));
 
         _socket_addr.sun_family = AF_LOCAL;
-       // _socket_addr.sin_addr.s_addr = get_host(host);
-        //_socket_addr.sin_port = htons(port);
         strcpy( _socket_addr.sun_path, socket_name );
         socket_addr = reinterpret_cast<struct sockaddr*>(&_socket_addr);
 
@@ -106,14 +102,12 @@ namespace socket_local
 
         return socket_t(new_socket_fd, new_socket_addr);
     }
-    void socket_t::connect(const char* host, const int port)
+    void socket_t::connect(const char* sicket_name)
     {
         struct sockaddr_un _socket_addr;
         memset(&_socket_addr, 0, sizeof(_socket_addr));
 
         _socket_addr.sun_family = AF_LOCAL;
-       // _socket_addr.sin_addr.s_addr = get_host(host);
-       // _socket_addr.sin_port = htons(port);
         socket_addr = reinterpret_cast<struct sockaddr*>(&_socket_addr);
 
         int error = 0;
@@ -130,15 +124,8 @@ namespace socket_local
         }
     }
 
-    in_addr_t socket_t::get_host(const char* host_name)
-    {
-        struct hostent* host = gethostbyname(host_name);
-        if(host == 0)
-        {
-            return inet_addr(host_name);
-        }
-        return inet_addr(inet_ntoa(*((struct in_addr *)host->h_addr)));
-    }
+
+    
 
     int socket_t::get_socket () const
     {
