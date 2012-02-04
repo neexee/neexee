@@ -1,12 +1,11 @@
 #include "moduleexecutor.h"
 #include "defaultmodule.h"
+#include <cstring>
 #include "../debug/debug.h"
 
-ModuleExecutor::ModuleExecutor(char* _sockname)
+ModuleExecutor::ModuleExecutor(const std::string& _sockname)
 {
     sockname = _sockname;
-    INFO("New moduleexecutor");
-    INFO(sockname);
     m_default = new  DefaultModule();
 }
 
@@ -16,13 +15,12 @@ void ModuleExecutor::reg(const std::string& keyword,
         const std::vector<std::string>& command
         )
 {
-    auto command_ = std::make_shared<std::vector<std::string> >(command);
 
     INFO(std::string("Registering"+ keyword).c_str());
 
     if(std::string(SYNC_MODULE).compare(command.front()) != 0)
     {
-        commands[keyword]  = command_;
+        commands[keyword]  = command;
     }
 
     if(std::string(DEFAULT_MODULE_NAME).compare(keyword) == 0)
@@ -38,6 +36,11 @@ void ModuleExecutor::reg(const std::string& keyword,
 }
 ModuleExecutor::~ModuleExecutor()
 {
+    for(auto it : modules)
+    {
+        delete  it.second;
+    }
+    delete m_default;
 }
 void ModuleExecutor::exec( const std::string& sender,
         const  std::vector<std::string>& message )
@@ -54,7 +57,7 @@ void ModuleExecutor::exec( const std::string& sender,
     if( executable != commands.end() )
     {
 
-        str = *(executable->second);
+        str = executable->second;
         //std::vector<std::string>::iterator it;
 
         for( std::string it: message)

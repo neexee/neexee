@@ -5,6 +5,6 @@ class Ping : public Module
 {
     public:
     virtual void generate_answer(const std::string& sender,
-            const std::vector<std::string>& text, char* sockname);
+            const std::vector<std::string>& text, const std::string& sockname);
 };
 #endif

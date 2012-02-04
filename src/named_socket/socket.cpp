@@ -40,8 +40,11 @@ namespace socket_local
     {}
 
     socket_t::~socket_t ()
-    {
+    {}
 
+ void socket_t::unlink()
+    {
+        ::unlink(path);
     }
 
     void socket_t::close ()
@@ -64,6 +67,7 @@ namespace socket_local
         int error = 0; 
         error = ::bind(socket_fd, socket_addr, sizeof(_socket_addr));
         check_error(error);
+        path  = socket_name;
     }
 
     void socket_t::listen () const

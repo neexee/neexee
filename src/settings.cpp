@@ -1,6 +1,8 @@
 #include "settings.h"
 #include "convert.h"
 #include "tools.h"
+#include "debug/debug.h"
+#define DELIMITERS "\t "
 void Settings::removeComment(std::string& line) const
     {
         if (line.find('#') != line.npos)
@@ -14,7 +16,7 @@ bool Settings::onlyWhitespace(std::string &line) const
 bool Settings::validLine(std::string &line) const
     {
         std::string temp = line;
-        temp.erase(0, temp.find_first_not_of("\t "));
+        temp.erase(0, temp.find_first_not_of(DELIMITERS));
         if (temp[0] == '=')
             return false;
 
@@ -29,19 +31,19 @@ void Settings::extractKey(std::string &key, size_t& sepPos, std::string& line) c
     {
         key = line.substr(0, sepPos);
         if (key.find('\t') != line.npos || key.find(' ') != line.npos)
-            key.erase(key.find_first_of("\t "));
+            key.erase(key.find_first_of(DELIMITERS));
     }
 void Settings::extractValue(std::string &value, size_t& sepPos, std::string &line) const
     {
         value = line.substr(sepPos + 1);
-        value.erase(0, value.find_first_not_of("\t "));
-        value.erase(value.find_last_not_of("\t ") + 1);
+        value.erase(0, value.find_first_not_of(DELIMITERS));
+        value.erase(value.find_last_not_of(DELIMITERS) + 1);
     }
 
 void Settings::extractContents(std::string &line) 
     {
         std::string temp = line;
-        temp.erase(0, temp.find_first_not_of("\t "));
+        temp.erase(0, temp.find_first_not_of(DELIMITERS));
         size_t sepPos = temp.find('=');
 
         std::string key, value;

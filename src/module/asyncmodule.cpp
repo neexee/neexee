@@ -13,7 +13,7 @@
 #include "../named_socket/socket.h"
 using namespace std;
 void AsyncModule::generate_answer(const string& sender,
-        const vector<string>& text, char* sockname)
+        const vector<string>& text, const std::string& sockname)
 {
     using socket_local::socket_t;
     char buf[80];
@@ -27,7 +27,7 @@ void AsyncModule::generate_answer(const string& sender,
     signal( SIGCHLD, sigchildHandler); 
 
     socket_t sock;
-    sock.connect(sockname);
+    sock.connect(sockname.c_str());
     INFO("socket connected");
     check = socketpair(AF_LOCAL, SOCK_STREAM,0, pair);
     pid_t childpid;

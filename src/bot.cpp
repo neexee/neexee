@@ -8,14 +8,15 @@
 #include <stdexcept>
 #include "modulehandler.h"
 #include "named_socket/socket.h"
+#include <memory>
 namespace bot
 {
- typedef struct data_t{
- char * sockname;
- bot_t* bot;
- socket_local::socket_t* socket;
- sem_t  counter;
- }data_t;
+    typedef struct data_t{
+        const char * sockname;
+        bot_t* bot;
+        socket_local::socket_t* socket;
+        sem_t  counter;
+    }data_t;
 
     using  gloox::JID;
     using  gloox::Client;
@@ -38,9 +39,10 @@ namespace bot
 
         settings = sets;
         settings.getValueOfKey<std::string>("jid");
-        
+
         JID jid(settings.getValueOfKey<std::string>("jid"));
         j = new Client( jid, settings.getValueOfKey<std::string>("pass"));
+        INFO(settings.getValueOfKey<std::string>("room").c_str());
         j->disableRoster();
         j->setCompression(false);
         j->setPresence( gloox::Presence::Available, -1 );
@@ -72,11 +74,6 @@ namespace bot
             INFO((*it).c_str());
 
         }
-        //        if(token_vector.front().compare(room->nick()) == 0)
-        //              {
-        //                  token_vector.erase(token_vector.begin());
-        //              }
-        //BUG, nick can contain SEPARATORS
         return token_vector;
 
     }
@@ -84,6 +81,13 @@ namespace bot
     {
         delete j;
         delete room;
+        delete executor;
+        server_socket->unlink();
+        server_socket->close();
+        delete server_socket;
+        pthread_mutex_destroy(&ready_thread_mutex);
+        sem_destroy(&thread_counter);
+
     } 
 
     void bot_t::handleMessage( const Message& stanza,
@@ -103,7 +107,8 @@ namespace bot
         return true;
     }
 
-    void bot_t::handleMUCMessage (MUCRoom *room, const Message &msg, bool priv)
+    void bot_t::handleMUCMessage (MUCRoom *room,
+            const Message &msg, bool priv)
     {
         if (!msg.when() && msg.from().resource().compare(room->nick()))
         {
@@ -119,18 +124,19 @@ namespace bot
         std::cout << "Connected" << std::endl;
         room = new MUCRoom( j, settings.getValueOfKey<std::string>("room"), 0, 0 );
         room->join();
-
         room->send(FIRST_MESSAGE);
         room->registerMUCRoomHandler(this);
+
+        server_socket = new socket_local::socket_t;
         register_modules();
+
         handler_thread = new pthread_t;
-        data_t* test = new data_t;
-        test->sockname = SOCKNAME;
-        test->bot = this;
-        test->counter = thread_counter;
-        test->socket= new socket_local::socket_t;
-        auto koko = this;
-       if(0 != pthread_create(handler_thread, NULL, bot_t::modules_handler, (void *)test))
+        data_t* data = new data_t;
+        data->sockname = SOCKNAME;
+        data->bot = this;
+        data->counter = thread_counter;
+        data->socket = server_socket;
+        if(0 != pthread_create(handler_thread, NULL, bot_t::modules_handler, (void *)data))
 
         {
             throw std::runtime_error(strerror(errno));
@@ -139,24 +145,19 @@ namespace bot
     }
     void bot_t::register_modules()
     {
-        //settings read
-        executor = new ModuleExecutor(SOCKNAME);
+        executor = new ModuleExecutor(std::string(SOCKNAME));
         INFO("Registering Ping");
         executor->reg("!ping", new Ping());
-        INFO("Registering bash script");
+        INFO("Registering external modules");
 
-        executor->reg("!ko", new AsyncModule(),\
-                std::vector<std::string>({"/bin/bash","/home/violetta/ko.sh"}));
-
-        executor->reg("!py", new AsyncModule(),\
-                std::vector<std::string>({"/usr/bin/python3","/home/violetta/best_os.py"}));
-
-        executor->reg(room->nick(), new DefaultModule());
-
-        executor->reg("!blya", new AsyncModule(),\
-                std::vector<std::string>({"/bin/zsh","/home/violetta/sovet.sh"}));
-
-
+        std::string external_modules = settings.getValueOfKey<std::string>("external_modules");
+        std::vector<std::string> keywords = tokenize(external_modules);
+        for(auto it : keywords)
+        {
+            std::string command = settings.getValueOfKey<std::string>(it);
+            std::vector<std::string> progname_with_params = tokenize(command);
+            executor->reg(it, new AsyncModule(), progname_with_params);
+        }
     }
     void bot_t::send(const std::string& message)
     {
@@ -165,17 +166,17 @@ namespace bot
 
     void* bot_t::modules_handler(void* _data)
     {
-        
+
         using socket_local::socket_t;
         using std::runtime_error;
-        
+
         data_t* data = static_cast<data_t*>(_data);
-        char * socketname = data->sockname;
+        const char * socketname = data->sockname;
         bot_t* bot  = data->bot;
         sem_t thread_counter = data->counter;
         socket_t* server_socket = data->socket;
         delete data;
-        
+
         INFO("Binding server socket");
         server_socket->bind(socketname);
         server_socket->listen();
@@ -208,6 +209,7 @@ namespace bot
                 sem_post(&thread_counter);
             }
         }
+        return NULL;
     }
 
 

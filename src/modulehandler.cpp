@@ -46,7 +46,7 @@ namespace bot
         int size = 1024;
         char* buf = new char[1024];
         data_t* data = static_cast<data_t*>(_data);
-        int check;
+        //int check;
         (data->module_socket).get(buf, size, 0);
         std::string answer(buf);
         data->bot->send(answer);

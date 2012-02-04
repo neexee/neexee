@@ -11,7 +11,6 @@
 #include <sys/un.h> 
 #include <sys/types.h>
 #include <sys/socket.h>
-//#include <arpa/inet.h> //for in_addr_t
 
 namespace socket_local
 {
@@ -26,7 +25,7 @@ namespace socket_local
             void connect(const char* socket_name);
             void bind (const char* socke_name);
             void close();
-
+            void unlink();
             int get_socket () const;
             bool get(char*& buffer, int& size, const bool check_end_symbols);
             void send (const char* message, int size); //Block
@@ -35,7 +34,7 @@ namespace socket_local
             int socket_fd;
             struct sockaddr* socket_addr;
             int recv_counter;
-          
+            const char * path; 
             socket_t (const int _socket, struct sockaddr* _socket_addr); //for return client socket
             void check_error(const int error) const;
     };

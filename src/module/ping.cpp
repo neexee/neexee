@@ -2,12 +2,12 @@
 #include "../named_socket/socket.h"
 #include "ping.h"
 void Ping::generate_answer(const std::string& sender,
-        const std::vector<std::string>& text, char* sockname)
+        const std::vector<std::string>& text, const std::string& sockname)
 {
     using socket_local::socket_t;
     socket_t sock;
     WARNING("Trying to connect");
-    sock.connect(sockname);
+    sock.connect(sockname.c_str());
     INFO("Connect ok");
     std::string message("PING PING PONG!");
     sock.send(message.c_str(),message.length());

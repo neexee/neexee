@@ -6,6 +6,7 @@
 #ifndef __CONVERT
 #define __CONVERT
 #include "tools.h"
+#include "debug/debug.h"
 
 class Convert
 {
@@ -15,7 +16,6 @@ public:
     {
         std::ostringstream ostr;
         ostr << val;
-
         return ostr.str();
     }
         
@@ -29,12 +29,12 @@ public:
 
         return returnVal;
     }
-/*
+
     template <typename T>
     static std::string string_to_T(std::string& val)
     {
         return val;
     }
-*/
+
 };
 #endif

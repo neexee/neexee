@@ -11,7 +11,7 @@
 class ModuleExecutor
 {
     public:
-    ModuleExecutor(char* _sockname); 
+    ModuleExecutor(const std::string&  _sockname); 
     void reg(const  std::string& keyword,
             Module* module, 
             const std::vector<std::string>& command\
@@ -24,11 +24,14 @@ class ModuleExecutor
     private:
 
     typedef std::map<std::string, Module*> modules_container;
-    typedef std::map<std::string, std::shared_ptr<std::vector<std::string> > > command_container; /*keyword/command */
+    //typedef std::map<std::string, std::shared_ptr<std::vector<std::string> > > command_container; /*keyword/command */
+    typedef std::map<std::string, std::vector<std::string> > command_container; /*keyword/command */
+
+    
     modules_container modules;
     command_container commands;
 
-    char* sockname;
+    std::string sockname;
     Module* m_default;
 };
 #endif
