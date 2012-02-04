@@ -1,6 +1,8 @@
 jid = bot@jabber.example.com/Desu_Machine
 pass = pass
 room = room@example.com/RoomNick
-external_modules = !python_script !bash_script
-!python_script = /usr/bin/python3 /script.py
-!bash_script = /usr/bin/bash /script/sh
+#This is two scripts for example
+external_modules = !os !sovet
+!os = /usr/bin/python3 scripts/best_os.py
+!sovet  = /bin/zsh scripts/sovet.sh
+
