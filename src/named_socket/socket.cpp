@@ -1,11 +1,9 @@
 #include <iostream>
 #include <exception>
 #include <stdexcept>
-//#include <algorithm>
 #include <string>
 #include <sys/socket.h>
 #include <unistd.h>
-//#include <time.h>
 #include <fcntl.h>
 #include <cstring> // need to memset
 #include <cstdlib>
@@ -17,23 +15,10 @@
 
 
 
-namespace /* Constants */
+namespace 
 {
-    /* socket() const */
-    const int SOCKET_DOMAIN = AF_LOCAL;   // local
-    const int SOCKET_TYPE = SOCK_STREAM; /*
-                                          * sequenced, reliable, two-way,
-                                          * connection-based byte stream
-                                          */
-    const int SOCKET_PROTOCOL = 0;       // operating system choose most approproate protocol
-
-    /* listen() const */
-    const int LISTEN_BACKLOG = 50;       /*
-                                          * limit  the number of outstanding
-                                          * connections in the socket's listen queue
-                                          */
-    /* read() const */
-    const int BUFFER_SIZE = 100000;        // size of reading buffer
+    const int LISTEN_BACKLOG = 50;
+    const int BUFFER_SIZE = 10000;        // size of reading buffer
 }
 
 namespace socket_local
@@ -45,7 +30,7 @@ namespace socket_local
     socket_t::socket_t ()
     {
         recv_counter = 0;
-        socket_fd = socket (SOCKET_DOMAIN, SOCKET_TYPE, SOCKET_PROTOCOL);
+        socket_fd = socket (AF_LOCAL, SOCK_STREAM, 0);
         check_error(socket_fd);
     }
 
@@ -61,7 +46,7 @@ namespace socket_local
 
     void socket_t::close ()
     {
-        if (socket_fd >= 0) //if socket is valid
+        if (socket_fd >= 0)
         {
             ::close (socket_fd);
         }
@@ -69,7 +54,6 @@ namespace socket_local
 
     void socket_t::bind (const char* socket_name)
     {
-        // Prepare sockaddr
         struct sockaddr_un _socket_addr;
         memset(&_socket_addr, 0, sizeof(_socket_addr));
 
@@ -79,7 +63,6 @@ namespace socket_local
 
         int error = 0; 
         error = ::bind(socket_fd, socket_addr, sizeof(_socket_addr));
-
         check_error(error);
     }
 
@@ -102,17 +85,19 @@ namespace socket_local
 
         return socket_t(new_socket_fd, new_socket_addr);
     }
-    void socket_t::connect(const char* sicket_name)
+
+    void socket_t::connect(const char* socket_name)
     {
         struct sockaddr_un _socket_addr;
         memset(&_socket_addr, 0, sizeof(_socket_addr));
 
         _socket_addr.sun_family = AF_LOCAL;
+        strcpy(_socket_addr.sun_path, socket_name);
         socket_addr = reinterpret_cast<struct sockaddr*>(&_socket_addr);
 
         int error = 0;
         error = ::connect(socket_fd, socket_addr, sizeof(_socket_addr));
-
+         INFO("Connecting");
         check_error(error);
     }
 
@@ -123,8 +108,6 @@ namespace socket_local
             throw runtime_error(strerror(errno));
         }
     }
-
-
     
 
     int socket_t::get_socket () const
@@ -145,6 +128,17 @@ namespace socket_local
         }
     }
 
+    socket_t socket_t::operator= (const socket_t& another_socket)
+    {
+        if(&another_socket == this)
+        {
+            return *this;
+        }
+
+        close();
+        socket_fd = another_socket.get_socket();
+        return *this;
+    }
     bool socket_t::get(char*& buffer, int& size, const bool check_end_symbols)
     {
         buffer = NULL;
@@ -191,15 +185,5 @@ namespace socket_local
         return false;
     }
 
-    socket_t socket_t::operator= (const socket_t& another_socket)
-    {
-        if(&another_socket == this)
-        {
-            return *this;
-        }
 
-        close();
-        socket_fd = another_socket.get_socket();
-        return *this;
-    }
 } /* socket */

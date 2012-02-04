@@ -7,7 +7,9 @@ OBJ = src/bot.o\
 	  src/module/defaultmodule.o\
 	  src/module/ping.o\
 	  src/module/asyncmodule.o\
-	  src/debug/debug.o
+	  src/debug/debug.o\
+	  src/modulehandler.o\
+	  src/named_socket/socket.o
 
 LDFLAGS=-lgloox -lpthread
 CXXFLAGS = -DDEBUG=2  -Wall -Wextra -std=gnu++0x

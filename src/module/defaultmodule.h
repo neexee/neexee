@@ -3,9 +3,9 @@
 #include "module.h"
 //#include <string>
 class DefaultModule: public Module 
-    {
-        public:
-            virtual std::string generate_answer(const std::string& sender,
-                                                const std::vector<std::string>& text);
-    };
+{
+    public:
+    virtual void  generate_answer(const std::string& sender,
+            const std::vector<std::string>& text, char* sockname);
+};
 #endif

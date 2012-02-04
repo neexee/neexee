@@ -11,9 +11,9 @@
 #define MAX_ARG_NUM 1
 #include "module.h"
 class AsyncModule : public Module
-    {
-        public:
-            virtual std::string generate_answer(const std::string& sender,
-                                                const std::vector<std::string>& text);
-    };
+{
+    public:
+    virtual void generate_answer(const std::string& sender,
+            const std::vector<std::string>& text, char* sockname);
+};
 #endif

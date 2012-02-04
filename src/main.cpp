@@ -27,7 +27,7 @@ int main( int argc, char* argv[] )
                   }
               }
          }
-        Bot b(settings);
+        bot::bot_t b(settings);
         b.connect();
       return 0;  
     }

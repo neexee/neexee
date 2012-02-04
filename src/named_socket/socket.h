@@ -28,15 +28,14 @@ namespace socket_local
             void close();
 
             int get_socket () const;
-
+            bool get(char*& buffer, int& size, const bool check_end_symbols);
             void send (const char* message, int size); //Block
-            bool get (char*& buffer, int& size, const bool check_end_symbols = false); //Nonblock
             socket_t operator= (const socket_t& another_socket);
         private:
             int socket_fd;
             struct sockaddr* socket_addr;
             int recv_counter;
-
+          
             socket_t (const int _socket, struct sockaddr* _socket_addr); //for return client socket
             void check_error(const int error) const;
     };
