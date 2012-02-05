@@ -1,14 +1,20 @@
-#include "bot.h"
+#include "bot/bot.h"
+#include "settings/settings.h"
 #include <unistd.h>
 #include <stdio.h>
+#include <signal.h>
 #define DEFAULT_CONFNAME "config"
+bot::bot_t* b;
+void sighandler(int sig);
 int main( int argc, char* argv[] )
     {
+        using settings::Settings;
         Settings  settings;
         char options[] = "f::";  /* valid options */
+        signal(SIGINT, sighandler);
         if(argc < 2)
          {   
-             std::cout<<"Picked up settings\n ";
+             std::cout<<"Picked up settings ";
              settings.get("config");
          }
         else
@@ -27,7 +33,13 @@ int main( int argc, char* argv[] )
                   }
               }
          }
-        bot::bot_t b(settings);
-        b.connect();
-      return 0;  
+        b = new bot::bot_t(settings);
+        b->connect();
+        return 0;  
     }
+void sighandler(int sig)
+{
+   printf("%s", "BYE!");
+   delete b;
+   exit(sig);
+}

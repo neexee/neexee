@@ -1,17 +1,17 @@
 CXX = g++
-OBJ = src/bot.o\
-	  src/tools.o\
+OBJ = src/bot/bot.o\
+	  src/tools/tools.o\
 	  src/main.o\
-	  src/settings.o\
+	  src/settings/settings.o\
 	  src/module/moduleexecutor.o\
 	  src/module/defaultmodule.o\
 	  src/module/ping.o\
 	  src/module/asyncmodule.o\
 	  src/debug/debug.o\
-	  src/modulehandler.o\
+	  src/bot/modulehandler.o\
 	  src/named_socket/socket.o
 
-LDFLAGS=-lgloox -lpthread
+LDFLAGS=-lgloox -lpthread 
 CXXFLAGS = -DDEBUG=2  -Wall -Wextra -std=gnu++0x
 BIN = bot
 all: $(OBJ)

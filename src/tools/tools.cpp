@@ -2,7 +2,7 @@
 #define __TOOLS
 #include <stdlib.h>
 #include <iostream>
-#include "debug/debug.h"
+#include "../debug/debug.h"
 #include <sys/types.h>
 #include <sys/wait.h>
 void exitWithError(const std::string &error) 
@@ -21,5 +21,4 @@ void sigchildHandler(int sig)
             INFO("Child process terminated");
         }
     }
-//void sigchildHandler(int sig) 
 #endif
