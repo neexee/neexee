@@ -3,8 +3,12 @@
 #include <iostream>
 #include <string>
 #include <map>
-#include <typeinfo>
+#include <stdexcept>
 #include "convert.h"
+#define JID_KEYWORD "jid"
+#define PASSWORD_KEYWORD "pass"
+#define ROOM_KEYWORD "room"
+#define EXTERNAL_MODULES_KEYWORD "external_modules"
 class Settings
     {
        public:
@@ -14,14 +18,16 @@ class Settings
          
          bool keyExists( const std::string &key) const;
         
-         // template <typename ValueType> ValueType getValueOfKey(std::string &key) const;
-         template <typename ValueType> ValueType getValueOfKey(const std::string& key, 
-                                                               const ValueType& defaultValue = ValueType())
+         template <typename ValueType> ValueType getValueOfKey(const std::string& key) 
              {
                  if (!keyExists(key))
-                      return defaultValue;
-
+                 {
+                      throw std::runtime_error(key);
+                 }
+                 else
+                 {
                   return Convert::string_to_T<ValueType>(contents.find(key)->second);
+                 }
              };
          
          ~Settings();

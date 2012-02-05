@@ -9,6 +9,7 @@
 #include "modulehandler.h"
 #include "named_socket/socket.h"
 #include <memory>
+#include <typeinfo>
 namespace bot
 {
     typedef struct data_t{
@@ -36,25 +37,38 @@ namespace bot
             pthread_mutex_destroy(&ready_thread_mutex);
             throw(std::runtime_error(strerror(errno)));
         }
+        std::string _jid;
+        std::string _pass;
 
         settings = sets;
-        settings.getValueOfKey<std::string>("jid");
+        try
+        {
+            _jid = settings.getValueOfKey<std::string>(JID_KEYWORD);
+            _pass = settings.getValueOfKey<std::string>(PASSWORD_KEYWORD);
+        }
+        catch(const std::runtime_error& e)
+        {
+            ERROR(std::string(e.what() + std::string(" not found in config")).c_str());
+            pthread_mutex_destroy(&ready_thread_mutex);
+            sem_destroy(&thread_counter);
+            throw e;
+        }
 
-        JID jid(settings.getValueOfKey<std::string>("jid"));
-        j = new Client( jid, settings.getValueOfKey<std::string>("pass"));
-        INFO(settings.getValueOfKey<std::string>("room").c_str());
-        j->disableRoster();
-        j->setCompression(false);
-        j->setPresence( gloox::Presence::Available, -1 );
-        j->disco()->setVersion("PETUH", "0.0.1", "");
-        j->disco()->setIdentity("kokoko", "bot");
-        j->registerMessageHandler( this );
-        j->registerConnectionListener( this );
+        JID jid(_jid);
+        client  = new Client( jid, _pass);
+        
+        client->disableRoster();
+        client->setCompression(false);
+        client->setPresence( gloox::Presence::Available, -1 );
+        client->disco()->setVersion(BOTNAME, VERSION);
+        client->disco()->setIdentity(BOTNAME, TYPE);
+        client->registerMessageHandler( this );
+        client->registerConnectionListener( this );
     }
 
     void bot_t::connect()
     {
-        j->connect();
+        client->connect();
     }
     std::vector<std::string> bot_t::tokenize(const std::string& message)
     {
@@ -66,20 +80,16 @@ namespace bot
         char_separator<char> sep(SEPARATORS);
         tokenizer< char_separator<char> > tokens(message, sep);
 
-        INFO("Addded tokens");
-
         for(tokenizer<char_separator<char> >::iterator it=tokens.begin(); it!=tokens.end();++it)
         {
             token_vector.push_back(*it);
-            INFO((*it).c_str());
-
         }
         return token_vector;
 
     }
     bot_t::~bot_t()
     {
-        delete j;
+        delete client;
         delete room;
         delete executor;
         server_socket->unlink();
@@ -93,13 +103,17 @@ namespace bot
     void bot_t::handleMessage( const Message& stanza,
             MessageSession* session)
     {
-        Message msg (Message::Chat, stanza.from(), "KOKOKOKOKO" );
-        j->send( msg );
+        Message msg (Message::Chat, stanza.from(), stanza.body());
+        client->send( msg );
     }
 
     void bot_t::onDisconnect( gloox::ConnectionError e )
     {
-        std::cout << " EГГОГ : " << e << '\n';
+        std::ostringstream ostr;
+        ostr<< e;
+        std::string error = ostr.str();
+        ERROR(error.c_str());
+        throw std::runtime_error(error);
     }
 
     bool bot_t::onTLSConnect( const gloox::CertInfo& )
@@ -121,8 +135,8 @@ namespace bot
     }
     void bot_t::onConnect()
     {
-        std::cout << "Connected" << std::endl;
-        room = new MUCRoom( j, settings.getValueOfKey<std::string>("room"), 0, 0 );
+        INFO("Connection successful");
+        room = new MUCRoom( client, settings.getValueOfKey<std::string>(ROOM_KEYWORD), 0, 0 );
         room->join();
         room->send(FIRST_MESSAGE);
         room->registerMUCRoomHandler(this);
@@ -148,13 +162,32 @@ namespace bot
         executor = new ModuleExecutor(std::string(SOCKNAME));
         INFO("Registering Ping");
         executor->reg("!ping", new Ping());
+        
         INFO("Registering external modules");
+        std::string external_modules;
+        try
+        {
+            external_modules = settings.getValueOfKey<std::string>(EXTERNAL_MODULES_KEYWORD);
+        }
+        catch(const std::runtime_error& e)
+        {
+            INFO("Plugins disabled :<");
+            return;
+        }
 
-        std::string external_modules = settings.getValueOfKey<std::string>("external_modules");
         std::vector<std::string> keywords = tokenize(external_modules);
         for(auto it : keywords)
         {
-            std::string command = settings.getValueOfKey<std::string>(it);
+            std::string command;
+            try
+            {
+                command = settings.getValueOfKey<std::string>(it);
+            }
+            catch(const std::runtime_error& e)
+            {
+                ERROR(std::string(e.what() + std::string(" not found in config")).c_str());
+                continue;
+            }
             std::vector<std::string> progname_with_params = tokenize(command);
             executor->reg(it, new AsyncModule(), progname_with_params);
         }
@@ -194,7 +227,6 @@ namespace bot
                 ERROR(error.what());
                 continue;
             }
-            INFO("New module connected");
             pthread_t* thread = new pthread_t;
             sem_wait(&thread_counter);
             try

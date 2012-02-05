@@ -115,12 +115,4 @@ Settings::~Settings()
     {
 
     }
-/*
-template <typename ValueType> ValueType Settings::getValueOfKey(std::string &key) const
-    {
-        if (!keyExists(key))
-            return NULL;
 
-        return Convert::string_to_T<ValueType>(contents.find(key)->second);
-    }
-*/

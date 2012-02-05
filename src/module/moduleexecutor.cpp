@@ -16,7 +16,7 @@ void ModuleExecutor::reg(const std::string& keyword,
         )
 {
 
-    INFO(std::string("Registering"+ keyword).c_str());
+    INFO(std::string("Registering keyword "+ keyword).c_str());
 
     if(std::string(SYNC_MODULE).compare(command.front()) != 0)
     {
@@ -58,7 +58,6 @@ void ModuleExecutor::exec( const std::string& sender,
     {
 
         str = executable->second;
-        //std::vector<std::string>::iterator it;
 
         for( std::string it: message)
         {

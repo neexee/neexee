@@ -20,6 +20,9 @@
 #define SEPARATORS " ,:"
 #define FIRST_MESSAGE "Всем привет в этом чатике"
 #define SOCKNAME "/tmp/bot.sock"
+#define BOTNAME "neexee"
+#define VERSION "0.0.3"
+#define TYPE "bot"
 namespace bot
 {
     using namespace gloox;
@@ -27,7 +30,6 @@ namespace bot
     {
         public:
             bot_t(Settings& sets);
-
             ~bot_t();
             void thread_ready(pthread_t* thread);
             void clear_threads();
@@ -74,10 +76,9 @@ namespace bot
 
         private:
             void register_modules();
-            //static   void  modules_handler(char * socketname);
             std::vector<std::string> tokenize(const std::string& message);
 
-            Client* j;
+            Client* client;
             MUCRoom *room;
             Settings settings;
             ModuleExecutor* executor;

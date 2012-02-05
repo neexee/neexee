@@ -21,4 +21,5 @@ void sigchildHandler(int sig)
             INFO("Child process terminated");
         }
     }
+//void sigchildHandler(int sig) 
 #endif
