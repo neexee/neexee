@@ -2,7 +2,10 @@
 #include "convert.h"
 #include "../tools/tools.h"
 #include "../debug/debug.h"
-#define DELIMITERS "\t "
+namespace
+{
+    const std::string DELIMITERS =  "\t ";
+}
 namespace settings
 {
 

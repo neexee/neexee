@@ -17,7 +17,8 @@ namespace socket_local
     class socket_t
     {
         public:
-            socket_t (); //make socket for connect or listen
+            socket_t ();
+            explicit socket_t(int _socket_fd);
             virtual ~socket_t ();
 
             socket_t accept () const; //return new socket after accept

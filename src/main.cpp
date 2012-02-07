@@ -4,13 +4,14 @@
 #include <stdio.h>
 #include <signal.h>
 #define DEFAULT_CONFNAME "config"
+extern char* optarg;
 bot::bot_t* b;
 void sighandler(int sig);
 int main( int argc, char* argv[] )
     {
         using settings::Settings;
         Settings  settings;
-        char options[] = "f::";  /* valid options */
+        char options[] = "f:";  /* valid options */
         signal(SIGINT, sighandler);
         if(argc < 2)
          {   
@@ -24,8 +25,8 @@ int main( int argc, char* argv[] )
                   switch (c)
                   {
                       case 'f':
+                          //std::cout<<"Picked up settings from"<< optarg<< std::endl;
                           settings.get(std::string(optarg));
-                          std::cout<<"Picked up settings from"<< optarg<< std::endl;
                           break;
                       default :
                           std::cout<<"Unknown argument: "<< c << std::endl;

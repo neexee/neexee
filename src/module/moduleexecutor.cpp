@@ -2,6 +2,11 @@
 #include "defaultmodule.h"
 #include <cstring>
 #include "../debug/debug.h"
+namespace
+{
+    const std::string DEFAULT_MODULE_NAME =  "!what";
+    //const std::string SYNC_MODULE =  "sync";
+}
 namespace module
 {
     ModuleExecutor::ModuleExecutor(const std::string& _sockname)
@@ -24,7 +29,7 @@ namespace module
             commands[keyword]  = command;
         }
 
-        if(std::string(DEFAULT_MODULE_NAME).compare(keyword) == 0)
+        if(DEFAULT_MODULE_NAME.compare(keyword) == 0)
         {
             INFO(std::string("Registered default module with keyword "+ keyword).c_str());
             m_default = module;

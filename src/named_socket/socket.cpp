@@ -38,7 +38,11 @@ namespace socket_local
         socket_fd(_socket),
         socket_addr(_socket_addr)
     {}
-
+    socket_t::socket_t(int _socket_fd)
+    {
+        check_error(_socket_fd);
+        socket_fd = _socket_fd;
+    }
     socket_t::~socket_t ()
     {}
 

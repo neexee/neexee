@@ -75,4 +75,10 @@ namespace module
         }
     }
 }
+/*
+char** AsyncModule::parse_args(std::string& text )
+{
+     text.erase(0, text.find_first_not_of("\t "));
 
+}
+*/

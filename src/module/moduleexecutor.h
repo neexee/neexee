@@ -1,12 +1,10 @@
 #ifndef MODULEEXECUTOR_HPP
 #define  MODULEEXECUTOR_HPP
-#define DEFAULT_MODULE_NAME "!what"
-#define SYNC_MODULE "sync" 
+#define SYNC_MODULE "sync"
 #include "module.h"
 #include <string>
 #include <map>
 #include <vector>
-#include <memory>
 namespace module
 {
     class ModuleExecutor
