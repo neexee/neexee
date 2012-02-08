@@ -3,8 +3,8 @@
 #include "ping.h"
 namespace module
 {
-    void Ping::generate_answer(const std::string& sender,
-            const std::vector<std::string>& text, const std::string& sockname)
+    void Ping::generate_answer(const std::string& sender, const std::string& args,
+            const std::string& text, const std::string& sockname)
     {
         using socket_local::socket_t;
         socket_t sock;

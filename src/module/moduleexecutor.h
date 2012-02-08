@@ -13,17 +13,17 @@ namespace module
             ModuleExecutor(const std::string&  _sockname); 
             void reg(const  std::string& keyword,
                     Module* module, 
-                    const std::vector<std::string>& command\
-                    = std::vector<std::string>(1, std::string(SYNC_MODULE)));
+                    const std::string& command\
+                    = std::string(SYNC_MODULE));
             void exec( const std::string& sender,
-                    const   std::vector<std::string>& message );
+                    const   std::string& message );
 
             ~ModuleExecutor();
 
         private:
 
             typedef std::map<std::string, Module*> modules_container;
-            typedef std::map<std::string, std::vector<std::string> > command_container; /*keyword/command */
+            typedef std::map<std::string, std::string> command_container; /*keyword/command */
 
 
             modules_container modules;

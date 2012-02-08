@@ -24,8 +24,9 @@ namespace settings
                 {
                     std::istringstream istr(val);
                     T returnVal;
-                    if (!(istr >> returnVal))
-                        exitWithError("CFG: Not a valid " + (std::string)typeid(T).name() + " received!\n");
+                    istr >> returnVal;
+
+                 //       exitWithError("CFG: Not a valid " + (std::string)typeid(T).name() + " received!\n");
 
                     return returnVal;
                 }

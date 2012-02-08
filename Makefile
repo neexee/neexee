@@ -9,10 +9,12 @@ OBJ = src/bot/bot.o\
 	  src/module/asyncmodule.o\
 	  src/debug/debug.o\
 	  src/bot/modulehandler.o\
-	  src/named_socket/socket.o
+	  src/named_socket/socket.o\
+	  src/console/console.o\
+	  src/tools/tokenizer.o
 
 LDFLAGS=-lgloox -lpthread 
-CXXFLAGS = -DDEBUG=2  -Wall -Wextra -std=gnu++0x
+CXXFLAGS =-Wall -Wextra -std=gnu++0x
 BIN = bot
 all: $(OBJ)
 		$(CXX) $(LDFLAGS) $+ -o $(BIN)

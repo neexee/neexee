@@ -15,7 +15,7 @@ int main( int argc, char* argv[] )
         signal(SIGINT, sighandler);
         if(argc < 2)
          {   
-             std::cout<<"Picked up settings ";
+            // std::cout<<"Picked up settings ";
              settings.get("config");
          }
         else
@@ -29,7 +29,7 @@ int main( int argc, char* argv[] )
                           settings.get(std::string(optarg));
                           break;
                       default :
-                          std::cout<<"Unknown argument: "<< c << std::endl;
+              //            std::cout<<"Unknown argument: "<< c << std::endl;
                           break;
                   }
               }
@@ -40,7 +40,7 @@ int main( int argc, char* argv[] )
     }
 void sighandler(int sig)
 {
-   printf("%s", "BYE!");
+   printf("%s", "BYE!\n");
    delete b;
    exit(sig);
 }

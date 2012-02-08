@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include "../debug/debug.h"
+#include "../settings/convert.h"
 #include <sys/types.h>
 #include <sys/wait.h>
 void exitWithError(const std::string &error) 
@@ -14,11 +15,9 @@ void exitWithError(const std::string &error)
     };
 void sigchildHandler(int sig)
     {
-        pid_t pid;
+        
         int status;
-        while((pid = waitpid(-1, &status, WNOHANG)) > 0)
-        {
-            INFO("Child process terminated");
-        }
+        wait(&status);
+        INFO(std::string ("Child process terminated by signal " + settings::Convert::T_to_string(sig) ).c_str());
     }
 #endif

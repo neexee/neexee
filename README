@@ -1,1 +1,10 @@
 Simple jabber bot wich uses gloox library.
+
+Modules can be defined in config file, for example
+!module = /bin/bash scripts/module.sh
+
+In conference you can use
+!module * arg1 arg2 // some text
+It will be translated into command
+/bin/bash scripts/module.sh arg1 arg2
+and some text will be sent into stdout of your script.

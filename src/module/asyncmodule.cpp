@@ -11,74 +11,109 @@
 #include "../tools/tools.h"
 #include "../debug/debug.h"
 #include "../named_socket/socket.h"
+#include "../tools/tokenizer.h"
+#include <iostream>
+namespace 
+{
+        const char START_SYMBOL = '*';
+        const std::string END_STRING = "//";
+}
 namespace module
 {
-    void AsyncModule::generate_answer(const std::string& sender,
-            const std::vector<std::string>& text, const std::string& sockname)
+    void AsyncModule::generate_answer(const std::string& sender, const std::string& args,
+            const std::string& _text, const std::string& sockname)
     {
         using socket_local::socket_t;
         using std::string;
         using std::vector;
+        using tokenizer::Tokenizer;
 
-        char buf[80];
+        char buf[1024];
         int check;
-        int status;
         int pair[2];
 
-        string binaryFile = text.front();
-        INFO(string("Binary file: "+ binaryFile).c_str() );
+        //prepare argv for execv 
+        std::string text = _text;
+        Tokenizer _tokenizer = Tokenizer(args);
+        vector<string> arg_vector = _tokenizer.tokenize();
+        vector<string> additional_args = parse_args(text);
+        for(auto it : additional_args )
+        {
+            arg_vector.push_back(it);
+        }
+        const char **argv = new const char* [arg_vector.size()+2];
+        for (size_t j = 0;  j < arg_vector.size();  ++j)
+        {    argv [j] = arg_vector[j].c_str();
+             INFO(arg_vector[j].c_str());
+        }
+        argv [arg_vector.size()] = NULL;
 
-        signal( SIGCHLD, sigchildHandler); 
-
+        //prepare sockets for IPC
         socket_t sock;
         sock.connect(sockname.c_str());
-        INFO("socket connected");
         check = socketpair(AF_LOCAL, SOCK_STREAM,0, pair);
-        pid_t childpid;
         if(check == -1)
         {
-
-            strerror_r(errno, buf, sizeof buf);
-            ERROR(buf);
+            //strerror_r(errno, buf, sizeof buf);
+            ERROR(strerror(errno));
         }
         else
         {
+            pid_t childpid;
+            //prepare signal handler
+            signal(SIGCHLD, sigchildHandler); 
 
+            //fork, dup, execv
             childpid = fork();
             if(childpid  == 0)
             { 
-                //INFO("dup2 stdout socket");
                 dup2(pair[1], 1);
 
-                check =  execl(binaryFile.c_str(), binaryFile.c_str(), text[1].c_str(), (char *) 0);
+                check =  execv(argv[0], (char **)argv);
                 if(check == -1)
                 {
-                    strerror_r(errno, buf, sizeof buf);
-                    ERROR(buf);
+                   // strerror_r(errno, buf, sizeof buf);
+                    ERROR(strerror(errno));
                 }
 
             }
             if( childpid > 0)
             {
-                do
+             // socket_t reader(pair[0]);
+              int size;
+              
+              INFO("Entering get");
+               size = read(pair[0], buf, sizeof buf);
                 {
-                    check = read(pair[0], buf, sizeof buf);
-                    if(check>0)
-                    {
-                        sock.send(buf, check);
-                    }
-                }while (check  == (sizeof buf) );
-                sock.close();
-                wait(&status);
+                  INFO("leave read");
+                  sock.send(buf, size);
+                }
+              sock.close();
             }
 
         }
     }
-}
-/*
-char** AsyncModule::parse_args(std::string& text )
-{
-     text.erase(0, text.find_first_not_of("\t "));
 
+
+    const std::vector<std::string> AsyncModule::parse_args(std::string& text )
+    {
+        using std::string;
+        using tokenizer::Tokenizer;
+        std::vector<string> args_vec;
+        string args;
+
+        text.erase(0, text.find_first_not_of("\t ")); 
+        if(text[0] == START_SYMBOL)
+        {
+            size_t pos_end_args; 
+            if( (pos_end_args = text.find(END_STRING)) != string::npos)
+            {
+                args = text.substr(1, pos_end_args-1);
+                text.erase(0, pos_end_args+2);
+                Tokenizer _tokenizer = Tokenizer(args);
+                args_vec = _tokenizer.tokenize();
+            }
+        }
+        return args_vec;
+    }
 }
-*/

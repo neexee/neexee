@@ -7,8 +7,8 @@ namespace module
     class Module
     {
         public:
-            virtual void generate_answer(const std::string& sender,
-                    const std::vector<std::string>& text, const std::string& sockname) = 0;
+            virtual void generate_answer(const std::string& sender, const std::string& args,
+                    const std::string& text, const std::string& sockname) = 0;
     };
 }
 #endif
