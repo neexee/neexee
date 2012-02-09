@@ -12,6 +12,7 @@ namespace module
                     const std::string& text, const std::string& sockname);
     
             const std::vector<std::string> parse_args(std::string& text );
+            static void sigchildHandler(int sig);
     };
 }
 #endif

@@ -8,7 +8,7 @@
 #include <sys/wait.h>
 #include <errno.h>
 #include "asyncmodule.h"
-#include "../tools/tools.h"
+#include  "../settings/convert.h"
 #include "../debug/debug.h"
 #include "../named_socket/socket.h"
 #include "../tools/tokenizer.h"
@@ -61,7 +61,7 @@ namespace module
         {
             pid_t childpid;
             //prepare signal handler
-            signal(SIGCHLD, sigchildHandler); 
+            signal(SIGCHLD, AsyncModule::sigchildHandler); 
 
             //fork, dup, execv
             childpid = fork();
@@ -79,13 +79,9 @@ namespace module
             }
             if( childpid > 0)
             {
-             // socket_t reader(pair[0]);
               int size;
-              
-              INFO("Entering get");
                size = read(pair[0], buf, sizeof buf);
                 {
-                  INFO("leave read");
                   sock.send(buf, size);
                 }
               sock.close();
@@ -94,6 +90,13 @@ namespace module
         }
     }
 
+    void AsyncModule::sigchildHandler(int sig)
+    {
+
+        int status;
+        wait(&status);
+        INFO(std::string ("Child process terminated by signal " + settings::Convert::T_to_string(sig) ).c_str());
+    }
 
     const std::vector<std::string> AsyncModule::parse_args(std::string& text )
     {

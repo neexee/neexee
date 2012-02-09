@@ -60,7 +60,7 @@ namespace module
             const  std::string& _message )
     {
         using tokenizer::Tokenizer;
-        INFO("Executing command");
+       // INFO("Executing command");
         std::string keyword;
         std::string args;
         Tokenizer _tokenizer = Tokenizer(_message);
@@ -71,8 +71,8 @@ namespace module
         //std::string keyword = message.front();
         std::string message = _message;
         message.erase(0, keyword.length());
-        INFO(std::string("Keyword = " + keyword).c_str());
-        INFO(std::string("Sender = " + sender ).c_str());
+       // INFO(std::string("Keyword = " + keyword).c_str());
+       // INFO(std::string("Sender = " + sender ).c_str());
         command_container::iterator executable = commands.find(keyword); 
 
         if( executable != commands.end() )

@@ -1,10 +1,11 @@
 /*
  * Logging
  * Can be disable. If need, you can be define DEBUG
- * Have three levels: 0 1 2
- * 0: print type of message and message
- * 1: print "0" and function
- * 2: print "1" and number of line
+ * Have three levels: 0 1 2 3
+ * 0: do not print anything
+ * 1: print type of message and message
+ * 2: print "0" and function
+ * 3: print "1" and number of line
  */
 
 
@@ -15,24 +16,26 @@
 #define TYPE_INFO "\033[1;39m[INFO]\033[0m "
 #define TYPE_WARNING "\033[1;33m[WARNING]\033[0m "
 #define TYPE_ERROR "\033[1;31m[ERROR]\033[0m "
-
-#if DEBUG == 2
+#ifndef DEBUG
+#define INFO(message)
+#define ERROR(message) (debug::print(TYPE_ERROR, (message)))
+#define WARNING(message) (debug::print(TYPE_WARNING, (message)))
+#elif DEBUG == 3
 #define INFO(message) (debug::print(TYPE_INFO, (message), __func__, __LINE__))
 #define WARNING(message) (debug::print(TYPE_WARNING, (message), __func__, __LINE__))
 #define ERROR(message) (debug::print(TYPE_ERROR, (message), __func__, __LINE__))
-#elif DEBUG == 1
+#elif DEBUG == 2
 #define INFO(message) (debug::print(TYPE_INFO, (message), __func__))
 #define WARNING(message) (debug::print(TYPE_WARNING, (message), __func__))
 #define ERROR(message) (debug::print(TYPE_ERROR, (message), __func__))
-#elif DEBUG == 0
+#elif DEBUG == 1
 #define INFO(message) (debug::print(TYPE_INFO, (message)))
 #define WARNING(message) (debug::print(TYPE_WARNING, (message)))
 #define ERROR(message) (debug::print(TYPE_ERROR, (message)))
-#else
-/* Default defines, uses if logging is disable */
-#define INFO()
-#define WARNING()
-#define ERROR()
+#elif DEBUG == 0
+#define INFO(message)
+#define WARNING(message)
+#define ERROR(nessage)
 #endif
 
     class debug

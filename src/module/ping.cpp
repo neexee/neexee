@@ -8,7 +8,7 @@ namespace module
     {
         using socket_local::socket_t;
         socket_t sock;
-        WARNING("Trying to connect");
+        //WARNING("Trying to connect");
         sock.connect(sockname.c_str());
         INFO("Connect ok");
         std::string message("PING PING PONG!");

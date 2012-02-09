@@ -14,7 +14,7 @@ OBJ = src/bot/bot.o\
 	  src/tools/tokenizer.o
 
 LDFLAGS=-lgloox -lpthread 
-CXXFLAGS =-Wall -Wextra -std=gnu++0x
+CXXFLAGS = -Wall -Wextra -std=gnu++0x
 BIN = bot
 all: $(OBJ)
 		$(CXX) $(LDFLAGS) $+ -o $(BIN)
