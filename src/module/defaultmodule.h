@@ -3,11 +3,11 @@
 #include "module.h"
 namespace module
 {
-    class DefaultModule: public Module 
+    class default_module: public module_i
     {
         public:
             virtual void  generate_answer(const std::string& sender, const std::string& args,
-                    const std::string& text, const std::string& sockname);
+                    const std::string& text, bot::bot_i* bot);
     };
 }
 #endif

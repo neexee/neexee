@@ -11,41 +11,41 @@
 #define EXTERNAL_MODULES_KEYWORD "external_modules"
 namespace settings
 {
-    class Settings
+    class settings_t
     {
         public:
-            Settings();
+            settings_t();
 
-            void get(const std::string& fName);
+            void get(const std::string& filename);
 
-            bool keyExists( const std::string &key) const;
+            bool key_exists( const std::string &key) const;
 
-            template <typename ValueType> ValueType getValueOfKey(const std::string& key) 
+            template <typename value_type> value_type get_value_of_key(const std::string& key) 
             {
-                if (!keyExists(key))
+                if (!key_exists(key))
                 {
                     throw std::runtime_error(key);
                 }
                 else
                 {
-                    return Convert::string_to_T<ValueType>(contents.find(key)->second);
+                    return convert::string_to_T<value_type>(contents.find(key)->second);
                 }
             };
 
-            ~Settings();
+            ~settings_t();
 
         private:
-            void removeComment(std::string& line) const;
-            bool onlyWhitespace(std::string& line) const;
-            bool validLine(std::string& line) const;
-            void extractKey(std::string& key, size_t& sepPos, std::string& line) const;
-            void extractValue(std::string &value, size_t &sepPos, std::string &line) const;
-            void extractContents(std::string &line);
-            void parseLine(std::string &line, const size_t lineNo);
-            void ExtractKeys();
+            void remove_comment(std::string& line) const;
+            bool only_whitespace(std::string& line) const;
+            bool valid_line(std::string& line) const;
+            void extract_key(std::string& key, size_t& sep_pos, std::string& line) const;
+            void extract_value(std::string &value, size_t &sep_pos, std::string &line) const;
+            void extract_contents(std::string &line);
+            void parse_line(std::string &line, const size_t line_number);
+            void extract_keys();
 
             std::map<std::string, std::string> contents;
-            std::string fName;
+            std::string filename;
 
     };
 }

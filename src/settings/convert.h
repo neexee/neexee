@@ -8,7 +8,7 @@
 #include "../tools/tools.h"
 namespace settings
 {
-    class Convert
+    class convert
     {
         public:
             template <typename T> 
@@ -23,13 +23,13 @@ namespace settings
                 static T string_to_T( const std::string& val) 
                 {
                     std::istringstream istr(val);
-                    T returnVal;
-                 if(!istr >> returnVal)
-                 {
+                    T return_val;
+                    if(!istr >> return_val)
+                    {
 
-                        exitWithError("CFG: Not a valid " + (std::string)typeid(T).name() + " received!\n");
-                 }
-                    return returnVal;
+                        exit_with_error("CFG: Not a valid " + (std::string)typeid(T).name() + " received!\n");
+                    }
+                    return return_val;
                 }
 
             template <typename T>

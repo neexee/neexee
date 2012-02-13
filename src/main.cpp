@@ -9,8 +9,8 @@ bot::bot_t* b;
 void sighandler(int sig);
 int main( int argc, char* argv[] )
     {
-        using settings::Settings;
-        Settings  settings;
+        using settings::settings_t;
+        settings_t  settings;
         char options[] = "f:";  /* valid options */
         signal(SIGINT, sighandler);
         if(argc < 2)

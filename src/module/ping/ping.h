@@ -1,13 +1,13 @@
 #ifndef MODULE_PING_H
 #define MODULE_PING_H
-#include "module.h"
+#include "../module.h"
 namespace module
 {
-    class Ping : public Module 
+    class ping : public module_i 
     {
         public:
             virtual void generate_answer(const std::string& sender, const std::string& args,
-                    const std::string& text, const std::string& sockname);
+                    const std::string& text, bot::bot_i* bot);
     };
 }
 #endif

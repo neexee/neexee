@@ -1,4 +1,4 @@
 #ifndef __TOOLS
 #define __TOOLS
-void exitWithError(const std::string &error);
+void exit_with_error(const std::string &error);
 #endif

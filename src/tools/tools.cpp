@@ -6,7 +6,7 @@
 #include "tools.h"
 #include <sys/types.h>
 #include <sys/wait.h>
-void exitWithError(const std::string &error) 
+void exit_with_error(const std::string &error) 
     {
          std::cout << error;
          std::cin.ignore();

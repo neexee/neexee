@@ -1,5 +1,7 @@
 Simple jabber bot wich uses gloox library.
-
+Dependencies:
+* gloox library. On Gentoo, for example, just type "emerge net-libs/gloox", on Ubuntu "apt-get install gloox".
+* g++ >= 4.6
 Modules can be defined in config file, for example
 !module = /bin/bash scripts/module.sh
 

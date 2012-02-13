@@ -1,15 +1,15 @@
 #include <string>
 #include <vector>
-namespace tokenizer
+namespace tools
 {
-    class Tokenizer 
+    class tokenizer 
     {
         public:
-            Tokenizer(const std::string& str);
-            Tokenizer(const std::string& str, const  std::string& delimiters);
-            bool NextToken();
-            bool NextToken(const std::string& delimiters);
-            const std::string GetToken() const;
+            tokenizer(const std::string& str);
+            tokenizer(const std::string& str, const  std::string& delimiters);
+            bool next_token();
+            bool next_token(const std::string& delimiters);
+            const std::string get_token() const;
             const std::vector<std::string> tokenize();
             //void Reset();
         protected:

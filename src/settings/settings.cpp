@@ -9,17 +9,17 @@ namespace
 namespace settings
 {
 
-    void Settings::removeComment(std::string& line) const
+    void settings_t::remove_comment(std::string& line) const
     {
         if (line.find('#') != line.npos)
             line.erase(line.find('#'));
     }
 
-    bool Settings::onlyWhitespace(std::string &line) const
+    bool settings_t::only_whitespace(std::string &line) const
     {
         return (line.find_first_not_of(' ') == line.npos);
     }
-    bool Settings::validLine(std::string &line) const
+    bool settings_t::valid_line(std::string &line) const
     {
         std::string temp = line;
         temp.erase(0, temp.find_first_not_of(DELIMITERS));
@@ -33,91 +33,91 @@ namespace settings
         return false;
     }
 
-    void Settings::extractKey(std::string &key, size_t& sepPos, std::string& line) const
+    void settings_t::extract_key(std::string &key, size_t& sep_pos, std::string& line) const
     {
-        key = line.substr(0, sepPos);
+        key = line.substr(0, sep_pos);
         if (key.find('\t') != line.npos || key.find(' ') != line.npos)
             key.erase(key.find_first_of(DELIMITERS));
     }
-    void Settings::extractValue(std::string &value, size_t& sepPos, std::string &line) const
+    void settings_t::extract_value(std::string &value, size_t& sep_pos, std::string &line) const
     {
-        value = line.substr(sepPos + 1);
+        value = line.substr(sep_pos + 1);
         value.erase(0, value.find_first_not_of(DELIMITERS));
         value.erase(value.find_last_not_of(DELIMITERS) + 1);
     }
 
-    void Settings::extractContents(std::string &line) 
+    void settings_t::extract_contents(std::string &line) 
     {
         std::string temp = line;
         temp.erase(0, temp.find_first_not_of(DELIMITERS));
-        size_t sepPos = temp.find('=');
+        size_t sep_pos = temp.find('=');
 
         std::string key, value;
-        extractKey(key, sepPos, temp);
-        extractValue(value, sepPos, temp);
+        extract_key(key, sep_pos, temp);
+        extract_value(value, sep_pos, temp);
 
-        if (!keyExists(key))
+        if (!key_exists(key))
             contents.insert(std::pair<std::string, std::string>(key, value));
         else
-            exitWithError("CFG: Can only have unique key names!\n");
+            exit_with_error("CFG: Can only have unique key names!\n");
     }
 
-    void Settings::parseLine(std::string& line, size_t lineNo)
+    void settings_t::parse_line(std::string& line, size_t line_number)
     {
         if (line.find('=') == line.npos)
-            exitWithError("CFG: Couldn't find separator on line: " + Convert::T_to_string(lineNo) + "\n");
+            exit_with_error("CFG: Couldn't find separator on line: " + convert::T_to_string(line_number) + "\n");
 
-        if (!validLine(line))
-            exitWithError("CFG: Bad format for line: " + Convert::T_to_string(lineNo) + "\n");
+        if (!valid_line(line))
+            exit_with_error("CFG: Bad format for line: " + convert::T_to_string(line_number) + "\n");
 
-        extractContents(line);
+        extract_contents(line);
     }
 
-    void Settings::ExtractKeys()
+    void settings_t::extract_keys()
     {
         std::ifstream file;
-        file.open(fName.c_str());
+        file.open(filename.c_str());
         if (!file)
-            exitWithError("CFG: File " + fName + " couldn't be found!\n");
+            exit_with_error("CFG: File " + filename + " couldn't be found!\n");
 
         std::string line;
-        size_t lineNo = 0;
+        size_t line_number = 0;
         while (std::getline(file, line))
         {
-            lineNo++;
+            line_number++;
             std::string temp = line;
 
             if (temp.empty())
                 continue;
 
-            removeComment(temp);
-            if (onlyWhitespace(temp))
+            remove_comment(temp);
+            if (only_whitespace(temp))
                 continue;
 
-            parseLine(temp, lineNo);
+            parse_line(temp, line_number);
         }
 
         file.close();
     }
 
-    Settings::Settings()
+    settings_t::settings_t()
     {
-        // this->fName = fName;
-        //ExtractKeys();
+        // this->filename = filename;
+        //extract_keys();
     }
 
-    void Settings::get( const std::string& fName)
+    void settings_t::get( const std::string& filename)
     {
-        this->fName = fName;
-        ExtractKeys();
+        this->filename = filename;
+        extract_keys();
     }
 
-    bool Settings::keyExists(const std::string& key) const
+    bool settings_t::key_exists(const std::string& key) const
     {
         return contents.find(key) != contents.end();
     }
 
-    Settings::~Settings()
+    settings_t::~settings_t()
     {
 
     }

@@ -3,27 +3,27 @@ namespace
 {
     const std::string DELIMITERS(" \t\n\r");
 }
-namespace tokenizer
+namespace tools
 {
     using std::string;
-    Tokenizer::Tokenizer( const std::string& s)
+    tokenizer::tokenizer( const std::string& s)
     {
         m_string = s;
         m_offset = 0;
         m_delimiters =  DELIMITERS;
     }
-    Tokenizer::Tokenizer(const string& s, const std::string& delimiters)
+    tokenizer::tokenizer(const string& s, const std::string& delimiters)
     { 
         m_string  = s;
         m_offset = 0; 
         m_delimiters  = delimiters;
     }
-    bool Tokenizer::NextToken() 
+    bool tokenizer::next_token() 
     {
-        return NextToken(m_delimiters);
+        return next_token(m_delimiters);
     }
 
-    bool Tokenizer::NextToken(const std::string& delimiters) 
+    bool tokenizer::next_token(const std::string& delimiters) 
     {
         size_t i = m_string.find_first_not_of(delimiters, m_offset);
         if (string::npos == i) 
@@ -44,16 +44,16 @@ namespace tokenizer
         m_offset = j;
         return true;
     }
-    const std::string Tokenizer::GetToken() const
+    const std::string tokenizer::get_token() const
     {
         return m_token;
     }
-    const std::vector<std::string> Tokenizer::tokenize()
+    const std::vector<std::string> tokenizer::tokenize()
     {
         std::vector<std::string> tokens;
-        while(NextToken())
+        while(next_token())
         {
-            tokens.push_back(GetToken());
+            tokens.push_back(get_token());
         }
         return tokens;
     }
