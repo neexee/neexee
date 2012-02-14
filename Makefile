@@ -6,15 +6,14 @@ OBJ = src/bot/bot.o\
 	  src/moduleexecutor/moduleexecutor.o\
 	  src/module/defaultmodule.o\
 	  src/module/ping/ping.o\
+	  src/module/smart/smartmodule.o\
 	  src/module/pluginexecutor/pluginexecutor.o\
 	  src/debug/debug.o\
-	  src/bot/modulehandler.o\
-	  src/named_socket/socket.o\
 	  src/console/console.o\
 	  src/tools/tokenizer.o
 
 LDFLAGS=-lgloox -lpthread 
-CXXFLAGS =-DDEBUG=1 -Wall -Wextra -std=gnu++0x
+CXXFLAGS =-DDEBUG=3 -Wall -Wextra -std=gnu++0x
 BIN = bot
 all: $(OBJ)
 		$(CXX) $(LDFLAGS) $+ -o $(BIN)

@@ -10,6 +10,7 @@ namespace module
         public:
             virtual void generate_answer(const std::string& sender, const std::string& args,
                     const std::string& text, bot::bot_i* bot) = 0;
+            virtual ~module_i(){};
     };
 }
 #endif

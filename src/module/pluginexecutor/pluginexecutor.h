@@ -1,6 +1,5 @@
-#ifndef MODULE_ASYNC_H
-#define MODULE_ASYNC_H
-#define MAX_ARG_NUM 1
+#ifndef PLuGIN_EXECUTOR_H
+#define PLUGIN_EXECUTOR_H
 #include "../module.h"
 #include <vector>
 namespace module
@@ -10,9 +9,11 @@ namespace module
         public:
             virtual void generate_answer(const std::string& sender, const std::string& args,
                     const std::string& text, bot::bot_i* bot);
-    
-            const std::vector<std::string> parse_args(std::string& text );
             static void sigchild_handler(int sig);
+            virtual ~plugin_executor(){};
+       private:
+            const std::vector<std::string> parse_args(std::string& text );
+
     };
 }
-#endif
+#endif /* MODULE_ASYNC_H */

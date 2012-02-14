@@ -1,6 +1,5 @@
 #include "defaultmodule.h"
 #include "../debug/debug.h"
-#include "../named_socket/socket.h"
 namespace module
 {
     void  default_module::generate_answer(const std::string& sender, const std::string& args,

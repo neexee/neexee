@@ -8,6 +8,7 @@ namespace module
         public:
             virtual void  generate_answer(const std::string& sender, const std::string& args,
                     const std::string& text, bot::bot_i* bot);
+            virtual ~default_module(){};
     };
 }
 #endif

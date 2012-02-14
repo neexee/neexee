@@ -1,2 +1,6 @@
 #/bin/zsh
-echo $1
+for (( ; ; ))
+do
+   sleep $1
+   echo  $2
+done

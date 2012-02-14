@@ -10,7 +10,6 @@
 #include "pluginexecutor.h"
 #include  "../../settings/convert.h"
 #include "../../debug/debug.h"
-//#include "../named_socket/socket.h"
 #include "../../tools/tokenizer.h"
 #include <iostream>
 namespace 
@@ -30,7 +29,7 @@ namespace module
 
         char buf[1024];
         int check;
-        int pair[2];
+        int sockets[2];
 
         //prepare argv for execv 
         std::string text = _text;
@@ -48,17 +47,14 @@ namespace module
         }
         argv [arg_vector.size()] = NULL;
 
-        //prepare sockets for IPC
-       // socket_t sock;
-       // sock.connect(sockname.c_str());
-        check = socketpair(AF_LOCAL, SOCK_STREAM,0, pair);
+        check = socketpair(AF_LOCAL, SOCK_STREAM,0, sockets);
         if(check == -1)
         {
             //strerror_r(errno, buf, sizeof buf);
             ERROR(strerror(errno));
         }
         else
-        {
+        { 
             pid_t childpid;
             //prepare signal handler
             signal(SIGCHLD, plugin_executor::sigchild_handler); 
@@ -67,7 +63,7 @@ namespace module
             childpid = fork();
             if(childpid  == 0)
             { 
-                dup2(pair[1], 1);
+                dup2(sockets[1], 1);
 
                 check =  execv(argv[0], (char **)argv);
                 if(check == -1)
@@ -79,14 +75,24 @@ namespace module
             }
             if( childpid > 0)
             {
-              int size;
-               size = read(pair[0], buf, sizeof buf);
-               // {
-                  bot->send(std::string(buf));
-                //}
-             // sock.close();
-            }
+                int size;
+              INFO(std::string("CLOSING SOCKET "+ settings::convert::T_to_string(sockets[1]) ).c_str());
+                close(sockets[1]);
+                    while((size = recv(sockets[0], buf, sizeof buf, 0)) > 0)
+                    {
+                        if(buf[size-1] =='\n')
+                        {
+                            buf[size-1] = 0;
+                        }
+                        bot->send(std::string(buf));
+                    }
+                    close(sockets[0]);
+                    INFO(std::string("CLOSING SOCKET "+ settings::convert::T_to_string(sockets[1]) ).c_str());
+                    close(sockets[1]);
 
+                    INFO("RECIEVED OK");
+
+            }
         }
     }
 
@@ -95,6 +101,7 @@ namespace module
 
         int status;
         wait(&status);
+       // close(socket);
         INFO(std::string ("Child process terminated by signal " + settings::convert::T_to_string(sig) ).c_str());
     }
 
