@@ -7,6 +7,7 @@ OBJ = src/bot/bot.o\
 	  src/module/defaultmodule.o\
 	  src/module/ping/ping.o\
 	  src/module/smart/smartmodule.o\
+	  src/module/koko/kokomodule.o\
 	  src/module/pluginexecutor/pluginexecutor.o\
 	  src/debug/debug.o\
 	  src/console/console.o\

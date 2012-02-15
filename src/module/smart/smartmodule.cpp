@@ -28,10 +28,8 @@ namespace module
         backup.open(dictionary_file.c_str());
         if (!backup)
         {
-            ERROR("FILE, WTF?");
+            ERROR("File with dictionary not found. Creating empty dictionary.");
         }
-         //   return; 
-
         string key;
         string word;
         int count;
@@ -82,13 +80,11 @@ namespace module
     }
    string smart_module::get_next(const string& key)
     { 
-        INFO("Entering get");
         string next = "";
         if(!dict.empty())
         {
             pair<dictmap::iterator, dictmap::iterator >  range = dict.equal_range(key);
             int count=0;
-           // string next;
             bool found = 0;
 
             for(auto it = range.first; it!= range.second; ++it)
@@ -102,11 +98,8 @@ namespace module
 
             if(next == std::string(""))
             {
-                INFO("NOT FOUND IN MAP");
                 dictmap::iterator item = dict.begin();
                 std::advance(item, random_n_to_m(0, dict.size()) );
-                //if(item != dict.end())
-                //{
                 next = item->first;
                 INFO(next.c_str());
             }
@@ -121,7 +114,6 @@ namespace module
     {
         
         using tools::tokenizer;
-        INFO("Now i will put message into map");
         tokenizer tokens = tokenizer(message, delimiters);
         std::string prev;
         std::string  next;
@@ -143,40 +135,67 @@ namespace module
 
     }
     void smart_module::generate_answer(const std::string& sender, const std::string& args,
-                    const std::string& text, bot::bot_i* bot)
+            const std::string& text, bot::bot_i* bot)
     {
-        
+
         using tools::tokenizer;
-        parse_and_put(text);
-        INFO("In smart_module generate answer");
-        tokenizer tok = tokenizer(text, delimiters);
         INFO(text.c_str());
-        INFO("tokenizer ok");
+        tokenizer tok = tokenizer(text, delimiters);
         std::vector<std::string> tokens = tok.tokenize();
-        INFO("tokenize ok");
-        std::string begin = tokens.at(1);
+        if(tokens.size() != 0)
+        {
+            std::string nick = bot->get_room_nick();
 
-        INFO(begin.c_str());
+            size_t pos = text.find_first_not_of(" \t\n");
 
-        std::string answer = generate(begin, 4);
-        bot->send(sender +", " +answer);
+            if(pos == text.find(nick))
+            {
+                std::string begin = tokens.at(random_n_to_m(0, tokens.size()));
 
+                INFO(begin.c_str());
+
+                std::string answer = generate(begin, random_n_to_m(2, 8));
+                bot->send(sender +", " +answer);
+
+            }
+
+            parse_and_put(text);
+        }
     }
 
    string smart_module::generate(const string& begin, int length)
     {
         string answer;
         string token = begin;
-        INFO(std::string("length " + settings::convert::T_to_string(length)).c_str());
-            ;
+        bool end = 0;
         for(int i= 0; i< length; i++)
         {
 
             token = get_next(token);
-            INFO(token.c_str());
             answer+=token + " ";
+            switch(token[token.size()-1])
+            {
+                case ',':
+                    token[token.size()-1] ='.';
+                    end =1;
+                    break;
+                case '.':
+                    end =1;
+                    break;
+                case '!':
+                    end =1;
+                    break;
+                case '?':
+                    end =1;
+                    break;
+                default:
+                    break;
+            }
+            if(end)
+            {
+                break;
+            }
         }
-        INFO(answer.c_str());
         return answer;
     }
 
@@ -195,6 +214,5 @@ namespace module
     smart_module::~smart_module()
     {
         dump();
-        INFO("OK, DUMPED!");
     }
 }

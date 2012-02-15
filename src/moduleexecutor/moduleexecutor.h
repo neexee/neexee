@@ -20,6 +20,12 @@ namespace module
             void exec( const std::string& sender,
                     const   std::string& message );
             static  void* module_handler(void* _data);
+
+            void* generate_data(const std::string& sender,
+                                  const  std::string& message,
+                                  const std::string& args,
+                                  module_i* module);
+
             ~module_executor();
 
         private:
@@ -29,7 +35,6 @@ namespace module
             typedef std::map<std::string, module_i*> modules_container;
             typedef std::map<std::string, std::string> command_container; /*keyword/command */
 
-
             modules_container modules;
             command_container commands;
             std::vector<pthread_t*> ready_threads;
@@ -38,7 +43,7 @@ namespace module
             pthread_t* handler_thread;
 
             bot::bot_i* bot;
-            module_i* m_default;
+            std::vector<module_i*> default_modules;
     };
 }
 #endif

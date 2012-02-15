@@ -8,7 +8,7 @@
 #include "../module/pluginexecutor/pluginexecutor.h"
 namespace
 {
-    const std::string DEFAULT_MODULE_NAME =  "!what";
+    const std::string DEFAULT_MODULE_NAME =  "";
     //const std::string SYNC_MODULE =  "sync";
 }
 namespace module
@@ -24,11 +24,11 @@ namespace module
         module_executor* executor;
 
     }data_t;
-
+    
     module_executor::module_executor(bot::bot_i* _bot)
     {
         bot = _bot;
-        m_default = new  default_module();
+//        m_default = new  default_module();
         if(0 != pthread_mutex_init(&ready_thread_mutex, NULL))
         {
             throw std::runtime_error(strerror(errno));
@@ -49,21 +49,23 @@ namespace module
             )
     {
 
-        INFO(std::string("Registering keyword "+ keyword).c_str());
-
-        if(typeid(*module) ==typeid(plugin_executor))
-        {
-            commands[keyword] = command;
-        }
 
         if(DEFAULT_MODULE_NAME.compare(keyword) == 0)
         {
-            INFO(std::string("Registered default module with keyword "+ keyword).c_str());
-            m_default = module;
+            INFO(std::string("Registered default module "+ keyword).c_str());
+            default_modules.push_back(module);
         }
         else
         {
+            INFO(std::string("Registering keyword "+ keyword).c_str());
+
             modules[keyword] = module;
+
+            if(typeid(*module) ==typeid(plugin_executor))
+            {
+                commands[keyword] = command;
+            }
+
         }
 
     }
@@ -73,7 +75,10 @@ namespace module
         {
             delete  it.second;
         }
-        delete m_default;
+        for(auto it: default_modules)
+        {
+            delete it;
+        }
         pthread_mutex_destroy(&ready_thread_mutex);
         sem_destroy(&thread_counter);
 
@@ -105,16 +110,8 @@ namespace module
 
         if( it != modules.end())
         {
-            INFO(std::string ("Picked up keyword: "+ keyword).c_str());
-            data_t* data = new data_t;
-            data->module = it->second;;
-            data->sender = new std::string(sender);
-            data->message = new std::string(message);
-            data->args = new std::string(args);
-            data->bot = bot;
-            data->executor = this;
-            data->thread = new pthread_t;
-            if(0 != pthread_create(data->thread, NULL, module_executor::module_handler, (void *)data))
+            void* data = generate_data(sender, message, args, it->second);
+            if(0 != pthread_create(((data_t*)data)->thread, NULL, module_executor::module_handler, data))
 
             {
                 throw std::runtime_error(strerror(errno));
@@ -123,9 +120,33 @@ namespace module
         }
         else
         {
-            INFO("Calling default module");
-            m_default->generate_answer(sender,args, message, bot) ;
+            for(auto def : default_modules)
+            {
+                void* data = generate_data(sender, _message, args, def);
+                if(0 != pthread_create(((data_t*)data)->thread, NULL, module_executor::module_handler, data))
+
+                {
+                    throw std::runtime_error(strerror(errno));
+                }
+
+
+            }
         }
+    }
+    void* module_executor::generate_data(const std::string& sender,
+            const  std::string& message,
+            const std::string& args,
+            module_i* module)
+    {
+        data_t* data = new data_t;
+        data->module = module;
+        data->sender = new std::string(sender);
+        data->message = new std::string(message);
+        data->args = new std::string(args);
+        data->bot = bot;
+        data->executor = this;
+        data->thread = new pthread_t;
+        return data;
     }
     void* module_executor::module_handler(void* _data)
     {
