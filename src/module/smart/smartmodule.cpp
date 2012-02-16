@@ -134,12 +134,33 @@ namespace module
         }
 
     }
+    void smart_module::put(const std::vector<std::string>& message)
+    {
+        std::string prev;
+        std::string  next;
+        bool begin = 1;
+        prev = *(message.begin());
+        for(auto it: message )
+        {
+            next = it;
+            if(begin)
+            {
+                 begin = 0;
+                 continue;
+            }
+            put(prev, next); 
+            prev = next;
+
+        }
+
+    }
     void smart_module::generate_answer(const std::string& sender, const std::string& args,
-            const std::string& text, bot::bot_i* bot)
+            const std::string& _text, bot::bot_i* bot)
     {
 
         using tools::tokenizer;
-        INFO(text.c_str());
+        INFO(_text.c_str());
+        string text = _text;
         tokenizer tok = tokenizer(text, delimiters);
         std::vector<std::string> tokens = tok.tokenize();
         if(tokens.size() != 0)
@@ -150,6 +171,7 @@ namespace module
 
             if(pos == text.find(nick))
             {
+                tokens.erase(tokens.begin());
                 std::string begin = tokens.at(random_n_to_m(0, tokens.size()));
 
                 INFO(begin.c_str());
@@ -159,7 +181,7 @@ namespace module
 
             }
 
-            parse_and_put(text);
+            put(tokens);
         }
     }
 

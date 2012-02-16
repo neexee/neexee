@@ -1,0 +1,6 @@
+add_subdirectory (ping)
+IF(ENABLE_KOKO)
+    add_subdirectory (koko)
+ENDIF(ENABLE_KOKO)
+add_subdirectory (smart)
+add_subdirectory (pluginexecutor)

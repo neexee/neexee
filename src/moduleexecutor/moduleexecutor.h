@@ -1,6 +1,5 @@
 #ifndef MODULEEXECUTOR_HPP
 #define  MODULEEXECUTOR_HPP
-#define SYNC_MODULE "sync"
 #include "../module/module.h"
 #include <string>
 #include <map>
@@ -16,7 +15,7 @@ namespace module
             void reg(const  std::string& keyword,
                     module_i* module, 
                     const std::string& command\
-                    = std::string(SYNC_MODULE));
+                    = std::string());
             void exec( const std::string& sender,
                     const   std::string& message );
             static  void* module_handler(void* _data);

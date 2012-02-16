@@ -1,5 +1,6 @@
 #include <map>
 #include <string>
+#include <vector>
 #include "../module.h"
 namespace module
 {
@@ -16,6 +17,7 @@ namespace module
             void put(std::string& key, std::string& word);
             void dump();
             void parse_and_put(const std::string& message);
+            void put(const std::vector<std::string>& message);
             std::string generate(const std::string& begin, int length) ;
             int random_n_to_m(int n, int m);
 

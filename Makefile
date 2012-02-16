@@ -17,8 +17,8 @@ LDFLAGS=-lgloox -lpthread
 CXXFLAGS =-DDEBUG=3 -Wall -Wextra -std=gnu++0x
 BIN = bot
 all: $(OBJ)
-		$(CXX) $(LDFLAGS) $+ -o $(BIN)
+			$(CXX) $(LDFLAGS) $+ -o $(BIN)
 .cpp.o:
-		$(CXX) $(CXXFLAGS) -c $< -o $@
+			$(CXX) $(CXXFLAGS) -c $< -o $@
 clean:
-	rm -f -- ${OBJ} bot
+		rm -f -- ${OBJ} bot
