@@ -6,6 +6,8 @@ OBJ = src/bot/bot.o\
 	  src/moduleexecutor/moduleexecutor.o\
 	  src/module/defaultmodule.o\
 	  src/module/ping/ping.o\
+	  src/module/help/helpmodule.o\
+	  src/module/who/whomodule.cpp\
 	  src/module/smart/smartmodule.o\
 	  src/module/koko/kokomodule.o\
 	  src/module/pluginexecutor/pluginexecutor.o\
