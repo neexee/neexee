@@ -1,11 +1,20 @@
 #include "moduleexecutor.h"
-#include "../module/defaultmodule.h"
 #include <cstring>
 #include <typeinfo>
 #include <stdexcept>
+#include <sstream>
 #include "../tools/tokenizer.h"
 #include "../debug/debug.h"
 #include "../module/pluginexecutor/pluginexecutor.h"
+#include "../module/defaultmodule.h"
+#include "../module/help/helpmodule.h"
+#include "../module/smart/smartmodule.h"
+#ifdef ENABLE_KOKO
+#include "../module/koko/kokomodule.h"
+#endif
+#include "../module/who/whomodule.h"
+#include "../module/ping/ping.h"
+
 namespace
 {
     const std::string DEFAULT_MODULE_NAME =  "";
@@ -40,13 +49,14 @@ namespace module
             throw(std::runtime_error(strerror(errno)));
         }
 
+        settings = _bot->get_settings();
+
     }
 
 
-    void module_executor::reg(const std::string& keyword,
+    void module_executor::reg( const std::string& keyword,
             module_i* module,
-            const std::string& command
-            )
+            const std::string& command )
     {
 
 
@@ -57,7 +67,8 @@ namespace module
         }
         else
         {
-            INFO(std::string("Registering keyword "+ keyword).c_str());
+
+        INFO(std::string("Registering keyword "+ keyword).c_str());
 
             modules[keyword] = module;
 
@@ -69,6 +80,70 @@ namespace module
         }
 
     }
+    void module_executor::register_modules()
+    {
+        using module::smart_module;
+        using tools::tokenizer;
+        
+        reg("!help", new module::help_module());
+        INFO("Registering Ping");
+        reg("!ping", new ping());
+
+        smart_module* smart = new smart_module("dictionaries/dict");
+        reg("", smart);
+
+#ifdef KOKO_MODULE
+
+        reg("", new module::koko_module());
+
+#endif
+
+        reg("!who", new module::who_module());
+
+        INFO("Registering external modules");
+        std::string external_modules;
+        try
+        {
+            external_modules = settings->get_value_of_key<std::string>(EXTERNAL_MODULES_KEYWORD);
+        }
+        catch(const std::runtime_error& e)
+        {
+            WARNING("Plugins disabled :<");
+            return;
+        }
+        tokenizer _tokenizer = tokenizer(external_modules);
+        std::vector<std::string> keywords = _tokenizer.tokenize();
+        for(auto it : keywords)
+        {
+            std::string command;
+            try
+            {
+                command = settings->get_value_of_key<std::string>(it);
+            }
+            catch(const std::runtime_error& e)
+            {
+                ERROR(std::string(e.what() + std::string(" not found in config")).c_str());
+                continue;
+            }
+            size_t comment_pos = command.find("/*");
+            if(comment_pos != std::string::npos)
+            {
+                size_t pos_end_args = command.find("//");
+                if(pos_end_args != std::string::npos)
+                {
+                    command.erase(pos_end_args);
+                }
+            }
+            INFO(command.c_str());
+            size_t endpos = command.find_last_not_of(" \t");
+            if( std::string::npos != endpos )
+            {
+                command = command.substr( 0, endpos+1 );
+            }
+            reg(it, new plugin_executor(), command);
+        }
+    }
+
     module_executor::~module_executor()
     {
         for(auto it : modules)
@@ -148,6 +223,18 @@ namespace module
         data->thread = new pthread_t;
         return data;
     }
+
+    std::string module_executor::get_help_for_registered_modules()
+    {
+        std::string answer;
+        for(auto it : commands)
+        {
+            std::string command = settings->get_value_of_key<std::string>(it.first);
+            answer+= it.first +" runs a "+ command + "\n";
+        }
+      return answer;
+    }
+
     void* module_executor::module_handler(void* _data)
     {
         data_t* data = static_cast<data_t*>(_data);

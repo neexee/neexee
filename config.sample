@@ -2,7 +2,8 @@ jid = bot@jabber.example.com/Desu_Machine
 pass = pass
 room = room@example.com/RoomNick
 #This is two scripts for example
+# /* This text will be displayed as a help for a module//
 external_modules = !os !sovet
-!os = /usr/bin/python3 scripts/best_os.py
-!sovet  = /bin/zsh scripts/sovet.sh
+!os = /usr/bin/python3 scripts/best_os.py /*Generates random best OS*/
+!sovet  = /bin/zsh scripts/sovet.sh /*Gives great advice*/
 

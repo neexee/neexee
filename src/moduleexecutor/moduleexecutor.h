@@ -1,6 +1,7 @@
 #ifndef MODULEEXECUTOR_HPP
 #define  MODULEEXECUTOR_HPP
 #include "../module/module.h"
+#include "../settings/settings.h"
 #include <string>
 #include <map>
 #include <vector>
@@ -16,14 +17,19 @@ namespace module
                     module_i* module, 
                     const std::string& command\
                     = std::string());
+
+            void register_modules();
+
             void exec( const std::string& sender,
                     const   std::string& message );
             static  void* module_handler(void* _data);
+
 
             void* generate_data(const std::string& sender,
                                   const  std::string& message,
                                   const std::string& args,
                                   module_i* module);
+            std::string get_help_for_registered_modules();
 
             ~module_executor();
 
@@ -42,6 +48,7 @@ namespace module
             pthread_t* handler_thread;
 
             bot::bot_i* bot;
+            settings::settings_t* settings;
             std::vector<module_i*> default_modules;
     };
 }
