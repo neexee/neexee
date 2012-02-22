@@ -3,3 +3,6 @@ bot
 config
 dict*
 build/*
+*kde*
+*kate-swp*
+*~

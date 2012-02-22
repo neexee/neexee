@@ -131,7 +131,7 @@ namespace module
                 size_t pos_end_args = command.find("//");
                 if(pos_end_args != std::string::npos)
                 {
-                    command.erase(pos_end_args);
+                    command.erase(comment_pos);
                 }
             }
             INFO(command.c_str());
