@@ -9,8 +9,8 @@ namespace module
         public:
             smart_module(const std::string& dictionary_file);
             virtual ~smart_module();  
-            virtual void generate_answer(const std::string& sender, const std::string& args,
-                    const std::string& text, bot::bot_i* bot);
+            virtual void generate_answer(const message::message_t& msg, 
+					 const std::string& args,  bot::bot_i* bot);
 
             void read();
             std::string get_next(const std::string& key);

@@ -19,20 +19,20 @@ namespace
 }
 namespace module
 {
-    void plugin_executor::generate_answer(const std::string& sender, const std::string& args,
-            const std::string& _text, bot::bot_i* bot)
+    void plugin_executor::generate_answer(const message::message_t& msg, 
+				 const std::string& args,  bot::bot_i* bot) 
     {
        // using socket_local::socket_t;
         using std::string;
         using std::vector;
         using tools::tokenizer;
-
+        
         char buf[1024];
         int check;
         int sockets[2];
 
         //prepare argv for execv 
-        std::string text = _text;
+        std::string text = msg.body();
         tokenizer _tokenizer = tokenizer(args);
         vector<string> arg_vector = _tokenizer.tokenize();
         vector<string> additional_args = parse_args(text);

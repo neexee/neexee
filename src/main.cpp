@@ -1,11 +1,16 @@
-#include "bot/bot.h"
+
 #include "settings/settings.h"
 #include <unistd.h>
 #include <stdio.h>
 #include <signal.h>
 #define DEFAULT_CONFNAME "config"
-extern char* optarg;
+
+#ifdef USE_GLOOX
+#include "bot/bot.h"
 bot::bot_t* b;
+#endif
+
+extern char* optarg;
 void sighandler(int sig);
 int main( int argc, char* argv[] )
     {
@@ -34,13 +39,17 @@ int main( int argc, char* argv[] )
                   }
               }
          }
+#ifdef USE_GLOOX
         b = new bot::bot_t(settings);
         b->connect();
+#endif
         return 0;  
     }
 void sighandler(int sig)
 {
    printf("%s", "BYE!\n");
+#ifdef USE_GLOOX
    delete b;
+#endif
    exit(sig);
 }

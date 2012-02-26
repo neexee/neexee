@@ -3,6 +3,7 @@
 #include <typeinfo>
 #include <stdexcept>
 #include <sstream>
+
 #include "../tools/tokenizer.h"
 #include "../debug/debug.h"
 #include "../module/pluginexecutor/pluginexecutor.h"
@@ -132,6 +133,7 @@ namespace module
                 if(pos_end_args != std::string::npos)
                 {
                     command.erase(comment_pos);
+                    command.erase(pos_end_args);
                 }
             }
             INFO(command.c_str());
@@ -158,13 +160,14 @@ namespace module
         sem_destroy(&thread_counter);
 
     }
-    void module_executor::exec( const std::string& sender,
-            const  std::string& _message )
+    void module_executor::exec( const message::message_t& msg )
     {
         using tools::tokenizer;
 
         std::string keyword;
         std::string args;
+	const std::string sender = msg.sender();
+	const std::string _message = msg.body();
         tokenizer _tokenizer = tokenizer(_message);
 
         if(_tokenizer.next_token())

@@ -154,13 +154,16 @@ namespace module
         }
 
     }
-    void smart_module::generate_answer(const std::string& sender, const std::string& args,
-            const std::string& _text, bot::bot_i* bot)
+
+ void smart_module::generate_answer (const message::message_t& msg, 
+			const std::string& args,  bot::bot_i* bot) 
     {
 
         using tools::tokenizer;
-        INFO(_text.c_str());
-        string text = _text;
+	const std::string text = msg.body();
+	const std::string sender = msg.sender();
+        //INFO(text.c_str());
+        //string text = _text;
         tokenizer tok = tokenizer(text, delimiters);
         std::vector<std::string> tokens = tok.tokenize();
         if(tokens.size() != 0)

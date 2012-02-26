@@ -2,6 +2,7 @@
 #define  MODULEEXECUTOR_HPP
 #include "../module/module.h"
 #include "../settings/settings.h"
+#include "../message/message.h"
 #include <string>
 #include <map>
 #include <vector>
@@ -20,8 +21,7 @@ namespace module
 
             void register_modules();
 
-            void exec( const std::string& sender,
-                    const   std::string& message );
+            void exec( const message::message_t& msg);
             static  void* module_handler(void* _data);
 
 

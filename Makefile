@@ -1,5 +1,6 @@
 CXX = g++
 OBJ = src/bot/bot.o\
+	  src/message/message.o\
 	  src/tools/tools.o\
 	  src/main.o\
 	  src/settings/settings.o\
@@ -16,7 +17,7 @@ OBJ = src/bot/bot.o\
 	  src/tools/tokenizer.o
 
 LDFLAGS=-lgloox -lpthread 
-CXXFLAGS =-DDEBUG=3 -Wall -Wextra -std=gnu++0x
+CXXFLAGS =-DDEBUG=3 -DUSE_GLOOX -Wall -Wextra -std=gnu++0x
 BIN = bot
 all: $(OBJ)
 			$(CXX) $(LDFLAGS) $+ -o $(BIN)
