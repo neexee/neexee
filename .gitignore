@@ -1,5 +1,4 @@
 *.o
-bot
 config
 dict*
 build/*
