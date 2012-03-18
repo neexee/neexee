@@ -19,15 +19,14 @@
 namespace
 {
     const std::string DEFAULT_MODULE_NAME =  "";
-    //const std::string SYNC_MODULE =  "sync";
+    const int MAX_THREADS = 200;
 }
 namespace module
 {  
     typedef struct data_t
     {
         module_i* module;
-        const std::string* sender;
-        std::string* message;
+        message::message_t* msg;
         std::string* args;
         bot::bot_i* bot;
         pthread_t* thread;
@@ -38,13 +37,12 @@ namespace module
     module_executor::module_executor(bot::bot_i* _bot)
     {
         bot = _bot;
-//        m_default = new  default_module();
         if(0 != pthread_mutex_init(&ready_thread_mutex, NULL))
         {
             throw std::runtime_error(strerror(errno));
         }
 
-        if(0 != sem_init(&thread_counter, 0, 200)) //200 threads available
+        if(0 != sem_init(&thread_counter, 0, MAX_THREADS))
         {
             pthread_mutex_destroy(&ready_thread_mutex);
             throw(std::runtime_error(strerror(errno)));
@@ -166,8 +164,8 @@ namespace module
 
         std::string keyword;
         std::string args;
-	const std::string sender = msg.sender();
-	const std::string _message = msg.body();
+	    const std::string sender = msg.sender();
+	    const std::string _message = msg.body();
         tokenizer _tokenizer = tokenizer(_message);
 
         if(_tokenizer.next_token())
@@ -188,7 +186,7 @@ namespace module
 
         if( it != modules.end())
         {
-            void* data = generate_data(sender, message, args, it->second);
+            void* data = generate_data(message::message_t(sender, message, keyword),args, it->second);
             if(0 != pthread_create(((data_t*)data)->thread, NULL, module_executor::module_handler, data))
 
             {
@@ -200,7 +198,7 @@ namespace module
         {
             for(auto def : default_modules)
             {
-                void* data = generate_data(sender, _message, args, def);
+                void* data = generate_data(message::message_t(sender, message, keyword) ,args, def);
                 if(0 != pthread_create(((data_t*)data)->thread, NULL, module_executor::module_handler, data))
 
                 {
@@ -211,15 +209,13 @@ namespace module
             }
         }
     }
-    void* module_executor::generate_data(const std::string& sender,
-            const  std::string& message,
+    void* module_executor::generate_data(const message::message_t& msg,
             const std::string& args,
             module_i* module)
     {
         data_t* data = new data_t;
         data->module = module;
-        data->sender = new std::string(sender);
-        data->message = new std::string(message);
+        data->msg = new message::message_t(msg);
         data->args = new std::string(args);
         data->bot = bot;
         data->executor = this;
@@ -242,17 +238,15 @@ namespace module
     {
         data_t* data = static_cast<data_t*>(_data);
         module_i* module = data->module;
-        std::string sender = *(data->sender);
-        std::string message = *(data->message);
+        message::message_t msg = *(data->msg);
         std::string args = *(data->args);
         bot::bot_i* bot = data->bot;
         module_executor* executor = data->executor;
         pthread_t* thread = data->thread;
 
-        module->generate_answer(sender,args, message, bot);
-        delete data->sender;
+        module->generate_answer(message::message_t(msg),args, bot);
         delete data->args;
-        delete data->message;
+        delete data->msg;
         delete data;
         executor->clear_threads();
         executor->thread_ready(thread);

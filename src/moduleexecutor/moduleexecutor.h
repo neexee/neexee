@@ -16,7 +16,7 @@ namespace module
             module_executor(bot::bot_i* _bot); 
             void reg(const  std::string& keyword,
                     module_i* module, 
-                    const std::string& command\
+                    const std::string& command
                     = std::string());
 
             void register_modules();
@@ -25,10 +25,9 @@ namespace module
             static  void* module_handler(void* _data);
 
 
-            void* generate_data(const std::string& sender,
-                                  const  std::string& message,
-                                  const std::string& args,
-                                  module_i* module);
+            void* generate_data( const message::message_t& msg,
+                                 const std::string& args,
+                                 module_i* module);
             std::string get_help_for_registered_modules();
 
             ~module_executor();

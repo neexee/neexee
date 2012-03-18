@@ -2,12 +2,12 @@
 #include "../debug/debug.h"
 namespace module
 {
-    void  koko_module::generate_answer(const std::string& sender, const std::string& args,
-            const std::string& text, bot::bot_i* bot)
+    void  koko_module::generate_answer(const message::message_t& msg, const std::string& args,
+         bot::bot_i* bot)
     {
-        if(text.find("лисп") != text.npos)
+        if(msg.body().find("lisp") != msg.body().npos)
         {
-            bot->send(sender+", KOKOKOKO");
+            bot->send(msg.sender() +", KOKOKOKO");
         }
     }
 }

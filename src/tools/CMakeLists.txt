@@ -1,1 +1,6 @@
+include (CheckIncludeFile)
+include (CheckIncludeFiles)
+check_include_file(stdlib.h HAVE_STDLIB_H)
+check_include_file(sys/types.h HAVE_TYPES_H)
+check_include_file(sys/wait.h HAVE_TYPES_H)
 add_library (tools tokenizer.cpp tools.cpp)

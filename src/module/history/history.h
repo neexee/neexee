@@ -3,14 +3,19 @@
 #include <map>
 namespace module
 {
+  typedef std::pair<int, message::message_t&> hist_entry;
   class history : public module_i
   {
      public:
-          virtual void generate_answer(const std::string& sender, const std::string& args,
-                    const std::string& text, bot::bot_i* bot);
+          virtual void generate_answer(const message::message_t& msg, const std::string& args,
+                    bot::bot_i* bot);
           void save(const std::string& filename);
-	  typedef std::pair<std::string date, message::message_t _message> hist_entry;
+    virtual ~history();
+  private:     
+	  void put(message::message_t& entry);
+      void dump();
 	  std::vector<hist_entry> hist;
+      std::string history_file_name;
 	  
   };
 }

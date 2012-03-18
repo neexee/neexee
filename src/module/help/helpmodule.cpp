@@ -1,8 +1,8 @@
 #include "helpmodule.h"
 namespace module
 {
-    void  help_module::generate_answer(const std::string& sender, const std::string& args,
-            const std::string& text, bot::bot_i* bot)
+    void  help_module::generate_answer(const message::message_t& msg, const std::string& args,
+            bot::bot_i* bot)
     {
         bot->get_help();
     }
