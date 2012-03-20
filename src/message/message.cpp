@@ -3,7 +3,7 @@ namespace message
   {
 
   message_t::message_t ( const std::string& _sender, const std::string& _body,
-                         const std::string _keyword = std::string(""))
+                         const std::string& _keyword)
   {
     sender_ = _sender;
     body_ = _body;
