@@ -186,7 +186,7 @@ namespace module
 
         if( it != modules.end())
         {
-            void* data = generate_data(message::message_t(sender, message, keyword),args, it->second);
+            void* data = generate_data(message::message_t(sender, msg.body(), keyword),args, it->second);
             if(0 != pthread_create(((data_t*)data)->thread, NULL, module_executor::module_handler, data))
 
             {
@@ -198,7 +198,7 @@ namespace module
         {
             for(auto def : default_modules)
             {
-                void* data = generate_data(message::message_t(sender, message, keyword) ,args, def);
+                void* data = generate_data(message::message_t(sender, msg.body(), keyword) ,args, def);
                 if(0 != pthread_create(((data_t*)data)->thread, NULL, module_executor::module_handler, data))
 
                 {

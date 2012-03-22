@@ -8,6 +8,9 @@ namespace message
     public:
       message_t ( const std::string& _sender, const std::string& _body,
                   const std::string& _keyword = std::string(""));
+      message_t ( const std::string& _sender, const std::string& _body,
+                  std::string& _keyword);
+ 
       std::string sender() const;
       std::string body() const;
       std::string keyword() const;

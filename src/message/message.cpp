@@ -10,6 +10,16 @@ namespace message
     keyword_ = _keyword;
 
   }
+  message_t::message_t ( const std::string& _sender, const std::string& _body,
+                         std::string& _keyword)
+  {
+    sender_ = _sender;
+    body_ = _body;
+    keyword_ = _keyword;
+
+  }
+
+
   std::string message_t::sender() const
     {
       return sender_;
