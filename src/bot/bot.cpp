@@ -1,9 +1,12 @@
+#include <gloox/event.h>
 #include "bot.h"
 #include "../debug/debug.h"
 #include "../console/console.h"
 #include "../tools/tokenizer.h"
 #include <stdexcept>
 #include "../message/message.h"
+#include <time.h>
+#include "../settings/convert.h"
 namespace
 {
     const std::string BOTNAME =  "neexee";
@@ -84,6 +87,7 @@ namespace bot
         }
         room = new MUCRoom( client, room_and_nick, 0, 0 );
         room->join();
+        roomname =room->name();
         room->registerMUCRoomHandler(this);
         executor = new module::module_executor(this);
         executor->register_modules();
@@ -121,8 +125,9 @@ namespace bot
         if (!msg.when() && msg.from().resource().compare(room->nick()))
         {
 
-            INFO("Handling room message");
-            executor->exec( message_t(msg.from().resource(), msg.body())); 
+         //   INFO("Handling room message");
+           // INFO(msg.from().full().c_str());
+            executor->exec( message_t(msg.body(), priv, msg.from().resource(), msg.from().full())); 
         }
 
     }
@@ -155,7 +160,7 @@ namespace bot
         {
             result+=item->name()+"\n";
         }
-        send(result);
+        send(message_t(result, 0));
 
     }
 
@@ -195,9 +200,19 @@ namespace bot
     {
         return &settings;
     }
-    void bot_t::send(const std::string& message)
+    void bot_t::send(const message_t& message)
     {
-        room->send(message);
+      using gloox::Message;
+      
+        if(!message.priv())
+        {
+           room->send(message.body());
+        }
+        else
+        {
+          INFO("SEND MESSAGE");
+          client->send(Message(Message::MessageType::Chat, message.full(), message.body()));
+        }
     }
 
     std::string bot_t::get_room_nick()
@@ -215,7 +230,21 @@ namespace bot
         INFO("HELP");
         string answer = "This is a " + string(BOTNAME) + string(TYPE) +". Now you can use following commands:\n";
         answer += executor->get_help_for_registered_modules();
-        send(answer);
+        send(message::message_t(answer, 0));
+    }
+    void bot_t::ping(const std::string sender)
+    {
+        time(&start);
+        client->xmppPing(sender,this);
+    }
+    void bot_t::handleEvent ( const gloox::Event& event )
+    {
+        time_t stop;
+        std::string sender = event.stanza()->from().resource();
+        time(&stop);
+        double dif  = difftime(stop,start);
+        send(message::message_t(sender +", ping to you " + settings::convert::T_to_string<double>(dif*1000) +" ms", 1, sender, event.stanza()->from().full()));
+
     }
 
 }

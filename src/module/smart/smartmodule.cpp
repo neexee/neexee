@@ -4,6 +4,7 @@
 #include "../../tools/tokenizer.h"
 #include "../../debug/debug.h"
 #include "../../settings/settings.h"
+#include "../../message/message.h"
 #include "smartmodule.h"
 #include <stdlib.h>
 #include <time.h>
@@ -180,7 +181,7 @@ namespace module
                 INFO(begin.c_str());
 
                 std::string answer = generate(begin, random_n_to_m(2, 8));
-                bot->send(sender +", " +answer);
+                bot->send(message::message_t(sender +", " +answer, msg.priv()));
 
             }
 
@@ -226,12 +227,13 @@ namespace module
 
     int smart_module::random_n_to_m(int n, int m)
     {
-        srand ( time(NULL) );
+       // srand ( time(NULL) );
         return ((rand())%(m -n)) + n ;
     }
     
     smart_module::smart_module(const std::string& _dictionary_file)
-    {
+    { 
+       srand ( time(NULL) );
        dictionary_file = _dictionary_file;
        read();
 

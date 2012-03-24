@@ -6,6 +6,7 @@
 #include <stdexcept>
 #include "../debug/debug.h"
 #include "../bot/bot.h"
+#include "../message/message.h"
 namespace
 {
     const size_t BUFSIZE = 1024;
@@ -48,7 +49,7 @@ namespace console
       int i;
       while((i = read(0, buffer, BUFSIZE )) > 0)
         {
-            _bot->send(std::string(buffer));
+            _bot->send(message::message_t(std::string(buffer), 0));
              write(0,welcome, sizeof welcome);
         }
       return NULL;

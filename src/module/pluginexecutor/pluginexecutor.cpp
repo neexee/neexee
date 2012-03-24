@@ -12,6 +12,7 @@
 #include "../../debug/debug.h"
 #include "../../tools/tokenizer.h"
 #include <iostream>
+#include "../../message/message.h"
 namespace 
 {
         const char START_SYMBOL = '*';
@@ -84,7 +85,7 @@ namespace module
                         {
                             buf[size-1] = 0;
                         }
-                        bot->send(std::string(buf));
+                        bot->send(message::message_t(std::string(buf) , msg.priv()));
                     }
                     close(sockets[0]);
                     INFO(std::string("CLOSING SOCKET "+ settings::convert::T_to_string(sockets[1]) ).c_str());

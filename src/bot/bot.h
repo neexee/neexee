@@ -11,25 +11,30 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <ctime>
 #include <pthread.h>
 #include <semaphore.h>
+#include <gloox/eventhandler.h>
 #include "botinterface.h"
 #include "../settings/settings.h"
 #include "../moduleexecutor/moduleexecutor.h"
 namespace bot
 {
-    class bot_t : public gloox::MessageHandler, gloox::ConnectionListener,\
-                  gloox::MUCRoomHandler, gloox::MUCRoomConfigHandler, bot_i  
+    class bot_t : public gloox::MessageHandler, gloox::ConnectionListener,
+                  gloox::MUCRoomHandler, gloox::MUCRoomConfigHandler, gloox::EventHandler, bot_i  
     {
         public:
             bot_t(settings::settings_t& sets);
             ~bot_t();
             void connect();
-            virtual void send(const std::string& message);
+            virtual void send(const message::message_t& message);
             virtual std::string get_room_nick();
             virtual void  get_room_names();
             virtual settings::settings_t* get_settings();
             virtual void get_help();
+            virtual void ping(const std::string jid);
+              
+
 
         protected:
             /*MessageHandler*/
@@ -75,14 +80,17 @@ namespace bot
                     const gloox::DataForm & form);
             virtual void handleMUCConfigList( gloox::MUCRoom* room, const gloox::MUCListItemList& items,
                                          gloox::MUCOperation operation );
-
+            /*For ping*/
+            virtual void handleEvent(const gloox::Event&   event);
         private:
 
             gloox::Client* client;
             gloox::MUCRoom *room;
+            std::string roomname;
             std::string nick;
             settings::settings_t settings;
             module::module_executor* executor;
+            time_t start;
     };
 }
 #endif
