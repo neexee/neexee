@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 namespace neexee
 {
 	namespace bot
@@ -28,41 +30,49 @@ struct neexee::bot::Bot
 
 struct neexee::bot::EventNotify
 {
-	void notify(const ::neexee::bot::event::Event &e)
+	void notify(::neexee::bot::event::Event *e)
 		{this->neexee_bot_EventNotify_notify(e);}
-		virtual void neexee_bot_EventNotify_notify(const ::neexee::bot::event::Event &e) = 0;
+		virtual void neexee_bot_EventNotify_notify(::neexee::bot::event::Event *e) = 0;
 };
 
 struct neexee::bot::event::Event
 {
+	virtual void k(){};
 };
 
 struct neexee::bot::event::Reply
 {
-	void reply(const ::neexee::bot::message::Message &e)
+	void reply(::neexee::bot::message::Message *e)
 		{this->neexee_bot_event_Reply_reply(e);}
-		virtual void neexee_bot_event_Reply_reply(const ::neexee::bot::message::Message &e) = 0;
-		// Динамикоговно: а вдруг чатмодуль ответит не тем типом сообщения?
+		virtual void neexee_bot_event_Reply_reply(::neexee::bot::message::Message *e) = 0;
 };
 
 struct neexee::bot::message::Message
 {
-	
+	virtual void k(){};
 };
 
 struct neexee::bot::message::Text
 {
-	
+	::std::string getText()
+		{return this->neexee_bot_message_Text_getText();}
+		virtual ::std::string neexee_bot_message_Text_getText() = 0;
 };
 
 struct neexee::bot::Proto
 {
-	void start(const ::neexee::bot::EventNotify &e)
+	void start(::neexee::bot::EventNotify *e)
 		{this->neexee_bot_Proto_start(e);}
-		virtual void neexee_bot_Proto_start(const ::neexee::bot::EventNotify &e) = 0;
+		virtual void neexee_bot_Proto_start(::neexee::bot::EventNotify *e) = 0;
+
+	void stop()
+		{this->neexee_bot_Proto_stop();}
+		virtual void neexee_bot_Proto_stop() = 0;
 };
 
 struct neexee::bot::ChatModule
 {
-	//void no	
+	void notify(const neexee::bot::event::Event &e)
+		{this->neexee_bot_ChatModule_notify(e);}
+		virtual void neexee_bot_ChatModule_notify(const neexee::bot::event::Event &e);
 };

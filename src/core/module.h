@@ -13,7 +13,7 @@ namespace neexee
 
 #define NEEXEE_MODULE_EXTERNS(name, basename) \
 	extern "C" basename* load() { return new name(); } \
-	extern "C" void unload(basename *i) { delete i; }
+	extern "C" void unload(basename *i) { delete dynamic_cast<name*>(i); }
 
 #define NEEXEE_MODULE_EXTERNS_SINGLETONE(name, basename) \
 	static int MODULE_EXTERNS_COUNTER = 0; \

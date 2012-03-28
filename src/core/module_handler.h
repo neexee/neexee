@@ -36,42 +36,38 @@ template<class T> class neexee::ModuleHandler
 {
 	typedef T* Load();
 	typedef void Unload(T*);
-	const ::std::string filename;
-	int *counter;
 
+	int *counter;
 	Unload *unload;
 	void *library;	
 	T* instance;
 
-
 	void del()
 	{
-		if(!this->instance)
+		if(!instance)
 			return;
-		this->instance = NULL;
-
-		(*this->counter)--;
-		if(*this->counter > 0)
+		(*counter)--;
+		if(*counter)
 			return;
-		//r->onUnload();
-		this->unload(this->instance);
-		delete this->counter;
-		::dlclose(this->library);
+		unload(instance);
+		instance = NULL;
+		delete counter;
+		::dlclose(library);
 	}
 	void copy(const ModuleHandler<T> &o)
 	{
-		this->counter = o.counter;
-		this->unload = o.unload;
-		this->instance = o.instance;
-		this->library = o.library;
-		(*this->counter)++;
+		counter = o.counter;
+		unload = o.unload;
+		library = o.library;
+		instance = o.instance;
+		(*counter)++;
 	}
 
 	public:
-	ModuleHandler() : filename(""), instance(NULL)
+	ModuleHandler() : instance(NULL)
 	{
 	}
-	ModuleHandler(const ::std::string &filename) : filename(filename)
+	ModuleHandler(const ::std::string &filename)
 	{
 		this->counter = new int;
 		*this->counter = 1;
@@ -115,9 +111,8 @@ template<class T> class neexee::ModuleHandler
 			delete counter;
 			throw;
 		}
-		//r->onLoad();
 	}
-	ModuleHandler(const ModuleHandler<T> &o) : filename(o.filename)
+	ModuleHandler(const ModuleHandler<T> &o)
 	{
 		copy(o);
 	}

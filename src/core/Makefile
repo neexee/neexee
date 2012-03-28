@@ -1,4 +1,4 @@
-CXXFLAGS=-std=c++11 -pthread
+CXXFLAGS=-std=c++11 -pthread -g
 LDFLAGS=-lstdc++ -ldl -pthread
 
 core: core.o

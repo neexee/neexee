@@ -6,7 +6,7 @@
 #include "core_module.h"
 #include "module_handler.h"
 
-static void f(int i)
+static void nothing(int i)
 {
 
 }
@@ -25,7 +25,7 @@ int main(int argc, char **argv)
 	for(auto i : modules)
 		i->start();
 
-	::signal(SIGINT, f);
+	::signal(SIGINT, nothing);
 	::pause();
 
 	::std::cout << "Stopping modules" << ::std::endl;
