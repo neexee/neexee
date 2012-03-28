@@ -1,6 +1,9 @@
 #pragma once
 
 #include <memory>
+#include <string>
+
+#define SP(x) std::shared_ptr<x>
 
 namespace neexee
 {
@@ -19,7 +22,7 @@ namespace neexee
 			class Text;
 		}
 		class Proto;
-		class ChatModule;
+		class Chatmodule;
 	}
 }
 
@@ -30,9 +33,9 @@ struct neexee::bot::Bot
 
 struct neexee::bot::EventNotify
 {
-	void notify(::neexee::bot::event::Event *e)
+	void notify(SP(::neexee::bot::event::Event) e)
 		{this->neexee_bot_EventNotify_notify(e);}
-		virtual void neexee_bot_EventNotify_notify(::neexee::bot::event::Event *e) = 0;
+		virtual void neexee_bot_EventNotify_notify(SP(::neexee::bot::event::Event) e) {};
 };
 
 struct neexee::bot::event::Event
@@ -42,9 +45,9 @@ struct neexee::bot::event::Event
 
 struct neexee::bot::event::Reply
 {
-	void reply(::neexee::bot::message::Message *e)
+	void reply(SP(::neexee::bot::message::Message) e)
 		{this->neexee_bot_event_Reply_reply(e);}
-		virtual void neexee_bot_event_Reply_reply(::neexee::bot::message::Message *e) = 0;
+		virtual void neexee_bot_event_Reply_reply(SP(::neexee::bot::message::Message) e) {};
 };
 
 struct neexee::bot::message::Message
@@ -63,16 +66,26 @@ struct neexee::bot::Proto
 {
 	void start(::neexee::bot::EventNotify *e)
 		{this->neexee_bot_Proto_start(e);}
-		virtual void neexee_bot_Proto_start(::neexee::bot::EventNotify *e) = 0;
+		virtual void neexee_bot_Proto_start(::neexee::bot::EventNotify *e) {};
 
 	void stop()
 		{this->neexee_bot_Proto_stop();}
-		virtual void neexee_bot_Proto_stop() = 0;
+		virtual void neexee_bot_Proto_stop() {};
 };
 
-struct neexee::bot::ChatModule
+struct neexee::bot::Chatmodule
 {
-	void notify(const neexee::bot::event::Event &e)
-		{this->neexee_bot_ChatModule_notify(e);}
-		virtual void neexee_bot_ChatModule_notify(const neexee::bot::event::Event &e);
+	void start()
+		{this->neexee_bot_Chatmodule_start();}
+		virtual void neexee_bot_Chatmodule_start() {};
+
+	void stop()
+		{this->neexee_bot_Chatmodule_stop();}
+		virtual void neexee_bot_Chatmodule_stop() {};
+
+	void notify(SP(::neexee::bot::event::Event) e)
+		{this->neexee_bot_Chatmodule_notify(e);}
+		virtual void neexee_bot_Chatmodule_notify(SP(::neexee::bot::event::Event) e) {};
 };
+
+#undef SP

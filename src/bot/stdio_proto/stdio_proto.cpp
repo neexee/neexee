@@ -20,14 +20,13 @@ struct E : public neexee::bot::event::Event,
 	E(std::string text) : text(text)
 	{
 	}
-	void neexee_bot_event_Reply_reply(::neexee::bot::message::Message *e)
+	void neexee_bot_event_Reply_reply(std::shared_ptr<neexee::bot::message::Message> e)
 	{
-		auto t = dynamic_cast<neexee::bot::message::Text*>(e);
+		auto t = dynamic_cast<neexee::bot::message::Text*>(e.get());
 		if(t)
 			std::cout << "> " << t->getText() << std::endl;
 		else
 			std::cout << "***" << std::endl;
-		delete e;
 	}
 	std::string neexee_bot_message_Text_getText()
 	{
@@ -58,11 +57,11 @@ struct P : public neexee::bot::Proto
 void f(P& p)
 {
 	std::string s;
-	while(1)
+	while(std::cin.good())
 	{
 		std::getline(std::cin, s);
-		//std::shared_ptr< neexee::bot::event::Event> e(new E(s));
-		p.e->notify(new E(s));
+		std::shared_ptr<neexee::bot::event::Event> e(new E(s));
+		p.e->notify(e);
 	}
 }
 

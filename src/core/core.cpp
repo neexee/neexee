@@ -19,16 +19,14 @@ int main(int argc, char **argv)
 
 	::std::vector< ::neexee::ModuleHandler< ::neexee::CoreModule>> modules;
 	for(auto i : module_names)
-		modules.push_back(::neexee::ModuleHandler< ::neexee::CoreModule>(i));
+			modules.push_back(::neexee::ModuleHandler< ::neexee::CoreModule>(i));
 
-	::std::cout << "Starting modules" << ::std::endl;
 	for(auto i : modules)
 		i->start();
 
 	::signal(SIGINT, nothing);
 	::pause();
 
-	::std::cout << "Stopping modules" << ::std::endl;
 	for(auto i : modules)
 		i->stop();
 }
