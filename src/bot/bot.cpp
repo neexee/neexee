@@ -228,7 +228,7 @@ namespace bot
     {
         using std::string;
         INFO("HELP");
-        string answer = "This is a " + string(BOTNAME) + string(TYPE) +". Now you can use following commands:\n";
+        string answer = "This is a " +string(" ")+ string(BOTNAME) + string(TYPE) +". Now you can use following commands:\n";
         answer += executor->get_help_for_registered_modules();
         send(message::message_t(answer, 0));
     }

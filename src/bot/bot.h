@@ -18,6 +18,7 @@
 #include "botinterface.h"
 #include "../settings/settings.h"
 #include "../moduleexecutor/moduleexecutor.h"
+#include "query.h"
 namespace bot
 {
     class bot_t : public gloox::MessageHandler, gloox::ConnectionListener,
@@ -88,6 +89,7 @@ namespace bot
             gloox::MUCRoom *room;
             std::string roomname;
             std::string nick;
+            query::query_t quer;
             settings::settings_t settings;
             module::module_executor* executor;
             time_t start;
